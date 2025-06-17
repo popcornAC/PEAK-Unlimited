@@ -1,6 +1,9 @@
 # Peak-Unlimited
 A mod for PEAK which raises the lobby max player count. 
 
+![peakunlimited](https://github.com/user-attachments/assets/302a36a2-3b9f-4445-9044-276870d8b5f8)
+
+
 ## Installation
 In theory only the host should need to do this, however, I have not had the ability to thoroughly test this so please let me know if you test this with 5+ people successfully.
 
