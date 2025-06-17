@@ -26,11 +26,19 @@ public class Plugin : BaseUnityPlugin
             "General", 
             "MaxPlayers", 
             10, 
-            "The maximum number of players you want to be able to join your lobby. Warning: untested, higher numbers may break!"
+            "The maximum number of players you want to be able to join your lobby (Including yourself). Warning: untested, higher numbers may break! Range: 1-254"
         );
         
         NEW_MAX_PLAYERS = configMaxPlayers.Value;
-        
+
+        if (NEW_MAX_PLAYERS == 0)
+        {
+            NEW_MAX_PLAYERS = 1;
+        } else if (NEW_MAX_PLAYERS > 255)
+        {
+            NEW_MAX_PLAYERS = 254;
+        }
+        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} set the Max Players to " + NEW_MAX_PLAYERS + "!");
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is patching!");
         harmony.PatchAll(typeof(HostRoomOptionsPatch));
         harmony.PatchAll(typeof(PlayClickedPatch));
