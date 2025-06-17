@@ -2,6 +2,8 @@
 A mod for PEAK which raises the lobby max player count. 
 
 # Installation
+In theory only the host should need to do this, however, I have not had the ability to thoroughly test this so please let me know if you test this with 5+ people successfully.
+
 1.) Download Bepinex from [here](https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x64_5.4.23.3.zip) <br>
 2.) Extract the contents of that zip into your game directory (default: C:\Program Files (x86)\Steam\steamapps\common\PEAK) resulting in a folder that has the following files: <br>
 ![image](https://github.com/user-attachments/assets/403d9a1d-16a4-409c-a046-bc56141ac0ca) <br>
