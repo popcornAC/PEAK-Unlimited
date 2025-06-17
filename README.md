@@ -22,5 +22,3 @@ In theory only the host should be the only one who needs to install!
 
 ### Notes:
 - I've noticed I crash if I run the game on Vulkan, if you experience this try DX12
-- I've not been able to properly test this yet, it might flat out not work.
-- Please let me know if you have tested this with 5 or more players successfully, it should work in its current state but unfortunately I have not had the ability to test properly yet.
