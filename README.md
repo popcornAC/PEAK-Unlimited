@@ -31,5 +31,3 @@ Only the host needs to install!
 ![peakunlimited1](https://glarmer.xyz/images/1mNyvy8.png)
 
 ![peakunlimited1](https://glarmer.xyz/images/9pnQpW8.png)
-
-![peakunlimited1](https://glarmer.xyz/images/W5183qL.png)
