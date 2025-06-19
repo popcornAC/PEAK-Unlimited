@@ -1,9 +1,9 @@
 {
     "name": "PEAK_Unlimited",
-    "version_number": "1.0.0",
+    "version_number": "1.2.0",
     "website_url": "https://github.com/glarmer/PEAK-Unlimited/",
-    "description": "Unlocks the max player count for playing with more than 4 friends!",
+    "description": "Unlocks the max player cap for playing with more than 4 friends! (Configurable up to 2000 players!)",
     "dependencies": [
-        "BepInExPack-5.4.2100"
+        "BepInEx-BepInExPack-5.4.2100"
     ]
 }

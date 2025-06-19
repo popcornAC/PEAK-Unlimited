@@ -1,11 +1,18 @@
-# Peak-Unlimited
-A mod for PEAK which raises the lobby max player count. 
+# PEAK Unlimited
 
-![peakunlimited](https://github.com/user-attachments/assets/302a36a2-3b9f-4445-9044-276870d8b5f8)
+Have more than 4 climbing-enthusiast friends? Want to scale the PEAKs with all of them? Well have I got the solution for you... <br>
 
+![peakunlimited2](https://glarmer.xyz/images/head.png)
 
-## Installation
-In theory only the host should be the only one who needs to install!
+Introducing, "PEAK Unlimited", a mod for PEAK which raises the lobby max player count to any number you want (max 2000), only the host needs to have this mod! 
+
+## Configuration
+- Configuration can be found at: (steam directory)\PEAK\BepInEx\config\PeakUnlimited.cfg
+- The default max is 25, you can raise this up to 2000
+- Game may become unstable with lots of players
+
+## Manual Installation
+Only the host needs to install!
 
 1.) Download Bepinex from [here](https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x64_5.4.23.3.zip) <br>
 2.) Extract the contents of that zip into your game directory (default: C:\Program Files (x86)\Steam\steamapps\common\PEAK) resulting in a folder that has the following files: <br>
@@ -14,11 +21,15 @@ In theory only the host should be the only one who needs to install!
 4.) Navigate to ...\PEAK\BepInEx\plugins, copy and paste the PeakUnlimited.dll from releases into this folder. <br>
 5.) Run the game <br>
 
-## Configuration
-- Configuration can be found at: (steam directory)\PEAK\BepInEx\config\PeakUnlimited.cfg
-
 ## Important
 - DO NOT UNDER ANY CIRCUMSTANCE COMPLAIN ABOUT BUGS TO THE DEVELOPERS WHILE USING MODS. UNINSTALL MODS IF YOU ENCOUNTER BUGS AND THEN REPORT THEM IF THEY ARE STILL PRESENT.
+- If you have issues with auto install, try manually installing with the version of BepInEx that I link above.
+- Please report issues to [the mods github](https://github.com/glarmer/PEAK-Unlimited/), alternatively I will periodically check the [steam guide](https://steamcommunity.com/sharedfiles/filedetails/?id=3501916945&tscn=1750268995)
 
-### Notes:
-- I've noticed I crash if I run the game on Vulkan, if you experience this try DX12
+## Images
+
+![peakunlimited1](https://glarmer.xyz/images/1mNyvy8.png)
+
+![peakunlimited1](https://glarmer.xyz/images/9pnQpW8.png)
+
+![peakunlimited1](https://glarmer.xyz/images/W5183qL.png)
