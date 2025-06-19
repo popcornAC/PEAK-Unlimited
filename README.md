@@ -4,7 +4,7 @@ Have more than 4 climbing-enthusiast friends? Want to scale the PEAKs with all o
 
 ![peakunlimited2](https://glarmer.xyz/images/head.png)
 
-Introducing, "PEAK Unlimited", a mod for PEAK which raises the lobby max player count to any number you want (max 2000), only the host needs to have this mod! 
+Introducing, "PEAK Unlimited", a mod for PEAK which raises the lobby max player count to any number you want (max 20 to respect the servers), only the host needs to have this mod! 
 
 ## Configuration
 - Configuration can be found at: (steam directory)\PEAK\BepInEx\config\PeakUnlimited.cfg
