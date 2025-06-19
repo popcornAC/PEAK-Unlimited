@@ -8,7 +8,7 @@ Introducing, "PEAK Unlimited", a mod for PEAK which raises the lobby max player 
 
 ## Configuration
 - Configuration can be found at: (steam directory)\PEAK\BepInEx\config\PeakUnlimited.cfg
-- The default max is 25, you can raise this up to 2000
+- The default max is 20
 - Game may become unstable with lots of players
 
 ## Installation
