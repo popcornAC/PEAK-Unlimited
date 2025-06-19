@@ -11,6 +11,11 @@ Introducing, "PEAK Unlimited", a mod for PEAK which raises the lobby max player 
 - The default max is 25, you can raise this up to 2000
 - Game may become unstable with lots of players
 
+## Installation
+
+The mod is uploaded to Thunderstore, although at present Thunderstore seems to not be able to conduct automatic installs properly for PEAK so your mileage may vary.
+https://thunderstore.io/c/peak/p/glarmer/PEAK_Unlimited/
+
 ## Manual Installation
 Only the host needs to install!
 
