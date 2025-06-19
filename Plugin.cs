@@ -25,8 +25,8 @@ public class Plugin : BaseUnityPlugin
         (
             "General", 
             "MaxPlayers", 
-            25, 
-            "The maximum number of players you want to be able to join your lobby (Including yourself). Warning: untested, higher numbers may break! Range: 1-254"
+            20, 
+            "The maximum number of players you want to be able to join your lobby (Including yourself). Warning: untested, higher numbers may be unstable! Range: 1-20"
         );
         
         NEW_MAX_PLAYERS = configMaxPlayers.Value;
@@ -34,9 +34,9 @@ public class Plugin : BaseUnityPlugin
         if (NEW_MAX_PLAYERS == 0)
         {
             NEW_MAX_PLAYERS = 1;
-        } else if (NEW_MAX_PLAYERS > 2000)
+        } else if (NEW_MAX_PLAYERS > 30)
         {
-            NEW_MAX_PLAYERS = 1999;
+            NEW_MAX_PLAYERS = 30;
         }
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} set the Max Players to " + NEW_MAX_PLAYERS + "!");
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is patching!");
