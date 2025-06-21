@@ -26,7 +26,6 @@ public class Plugin : BaseUnityPlugin
     private static ConfigEntry<int> configMaxPlayers;
     private static ConfigEntry<bool> configExtraMarshmallows;
     private readonly Harmony harmony = new Harmony(MyPluginInfo.PLUGIN_GUID);
-    private Vector3 position;
 
     private void Awake()
     {
@@ -162,7 +161,7 @@ public class Plugin : BaseUnityPlugin
         if (!PhotonNetwork.IsConnected)
             return;
         Logger.LogInfo((object) string.Format("Spawn item: {0} at {1}", (object) item, (object) position));
-        PhotonNetwork.Instantiate("0_Items/" + item.name, position, Quaternion.identity).GetComponent<Item>();
+        PhotonNetwork.Instantiate("0_Items/" + item.name, position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f)).GetComponent<Item>();
     }
 
     public class HostRoomOptionsPatch 
@@ -204,7 +203,7 @@ public class Plugin : BaseUnityPlugin
             {
                 Vector3 campfirePosition = __instance.gameObject.transform.position;
                 //mmmm magic numbers
-                spawnMarshmallows(PlayerHandler.GetAllPlayers().Count+1-4, campfirePosition);
+                spawnMarshmallows(PlayerHandler.GetAllPlayers().Count+1-4+20, campfirePosition);
             }
         }
     }
