@@ -73,10 +73,11 @@ public class Plugin : BaseUnityPlugin
             _newMaxPlayers = 30;
         }
 
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} set the Max Players to " + _newMaxPlayers + "!");
+        NetworkConnector.MAX_PLAYERS = _newMaxPlayers;
+        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} set the Max Players to " + NetworkConnector.MAX_PLAYERS + "!");
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is patching!");
-        _harmony.PatchAll(typeof(HostRoomOptionsPatch));
-        _harmony.PatchAll(typeof(PlayClickedPatch));
+        //_harmony.PatchAll(typeof(HostRoomOptionsPatch));
+        //_harmony.PatchAll(typeof(PlayClickedPatch));
         if (_extraMarshmallows) {
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} extra marshmallows are enabled!");
             _harmony.PatchAll(typeof(AwakePatch));
@@ -156,32 +157,6 @@ public class Plugin : BaseUnityPlugin
         Logger.LogInfo((object) string.Format("Spawn item: {0} at {1}", (object) item, (object) position));
         PhotonNetwork.Instantiate("0_Items/" + item.name, position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f)).GetComponent<Item>();
     }
-
-    public class HostRoomOptionsPatch 
-    {
-        [HarmonyPatch(typeof(NetworkConnector), "HostRoomOptions")]
-        [HarmonyPostfix]
-        static void Postfix(ref RoomOptions __result)
-        {
-            Logger.LogInfo("Start of host room options patch!");
-            __result = new RoomOptions()
-            {
-                IsVisible = false,
-                MaxPlayers = _newMaxPlayers
-            };
-        }
-    }
-    
-    public class PlayClickedPatch 
-    {
-        [HarmonyPatch(typeof(MainMenuMainPage), "PlayClicked")]
-        [HarmonyPrefix]
-        static bool Prefix()
-        {
-            SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypeFriendsOnly, _newMaxPlayers);
-            return false;
-        }
-    }
     
     public class AwakePatch
     {
@@ -230,7 +205,7 @@ public class Plugin : BaseUnityPlugin
         static void Postfix(PlayerConnectionLog __instance)
         {
             _numberOfPlayers++;
-            Logger.LogInfo("Someone has joined the room! Number: " + _numberOfPlayers);
+            Logger.LogInfo("Someone has joined the room! Number: " + _numberOfPlayers + "/" + NetworkConnector.MAX_PLAYERS);
         }
     }
     
@@ -245,7 +220,7 @@ public class Plugin : BaseUnityPlugin
             {
                 _numberOfPlayers = 0;
             }
-            Logger.LogInfo("Someone has left the room! Number: " + _numberOfPlayers);
+            Logger.LogInfo("Someone has left the room! Number: " + _numberOfPlayers + "/" + NetworkConnector.MAX_PLAYERS);
         }
     }
 }
