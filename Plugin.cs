@@ -33,7 +33,6 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        // Plugin startup logic
         Logger = base.Logger;
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is loaded!");
 
@@ -129,18 +128,6 @@ public class Plugin : BaseUnityPlugin
         foreach (Vector3 position in Plugin.GetEvenlySpacedPointsAroundCampfire(number, 2.5f, 3f, campfirePosition))
             Plugin.Add(obj, position);
         Plugin.Logger.LogInfo((object) ("Plugin PeakUnlimited added with position: " + obj.GetName()));
-    }
-    
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.U))
-        {
-            foreach (Vector3 campfirePosition in Plugin.getCampfirePositions())
-            {
-                Plugin.Logger.LogInfo((object)"Spawning campfire mms!");
-                Plugin.spawnMarshmallows(4, campfirePosition);
-            }
-        }
     }
 
     private static Vector3 SetToGround(Vector3 vector)
