@@ -76,8 +76,6 @@ public class Plugin : BaseUnityPlugin
         NetworkConnector.MAX_PLAYERS = _newMaxPlayers;
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} set the Max Players to " + NetworkConnector.MAX_PLAYERS + "!");
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} is patching!");
-        //_harmony.PatchAll(typeof(HostRoomOptionsPatch));
-        //_harmony.PatchAll(typeof(PlayClickedPatch));
         if (_extraMarshmallows) {
             Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} extra marshmallows are enabled!");
             _harmony.PatchAll(typeof(AwakePatch));
@@ -89,7 +87,7 @@ public class Plugin : BaseUnityPlugin
         Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} has patched!");
     }
 
-    private static List<Vector3> GetEvenlySpacedPointsAroundCampfire(int numPoints, float innerRadius, float outerRadius, Vector3 campfirePosition)
+    private static List<Vector3> GetEvenlySpacedPointsAroundCampfire(int numPoints, float innerRadius, float outerRadius, Vector3 campfirePosition, Segment advanceToSegment)
     {
         List<Vector3> points = new List<Vector3>();
     
@@ -104,50 +102,35 @@ public class Plugin : BaseUnityPlugin
             float angle = i * Mathf.PI * 2f / numPoints; // Even spacing: 2π / n
             float x = radius * Mathf.Cos(angle);
             float z = radius * Mathf.Sin(angle);
-            points.Add(SetToGround(new Vector3(x, 0f, z) + campfirePosition));
+            if (advanceToSegment == Segment.Caldera)
+            {
+                points.Add(new Vector3(x, -0.5f, z) + campfirePosition);
+            } else if (advanceToSegment == Segment.TheKiln)
+            {
+                points.Add(new Vector3(x, -1f, z) + campfirePosition);
+            }
+            else
+            {
+                points.Add(SetToGround(new Vector3(x, 0f, z) + campfirePosition));
+            }
         }
         
         return points;
     }
     
-    private static List<Vector3> getCampfirePositions()
-    {
-        List<Vector3> campfirePositions = new List<Vector3>();
-        foreach (Campfire campfire in ((IEnumerable<Campfire>) Resources.FindObjectsOfTypeAll<Campfire>()).Where<Campfire>((Func<Campfire, bool>) (c => c.gameObject.scene.IsValid())).ToArray<Campfire>())
-        {
-            Plugin.Logger.LogInfo((object) "Found campfire!");
-            campfirePositions.Add(campfire.gameObject.transform.position);
-        }
-        return campfirePositions;
-    }
-    
-    private static void spawnMarshmallows(int number, Vector3 campfirePosition)
+    private static void spawnMarshmallows(int number, Vector3 campfirePosition, Segment advanceToSegment)
     {
         Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[(ushort) 46];
         Plugin.Logger.LogInfo((object) ("Plugin PeakUnlimited " + obj.GetName()));
         obj.GetName();
-        foreach (Vector3 position in Plugin.GetEvenlySpacedPointsAroundCampfire(number, 2.5f, 3f, campfirePosition))
+        foreach (Vector3 position in Plugin.GetEvenlySpacedPointsAroundCampfire(number, 2.5f, 3f, campfirePosition, advanceToSegment))
             Plugin.Add(obj, position);
         Plugin.Logger.LogInfo((object) ("Plugin PeakUnlimited added with position: " + obj.GetName()));
     }
 
     private static Vector3 SetToGround(Vector3 vector)
     {
-        return HelperFunctions.GetGroundPos(vector, HelperFunctions.LayerType.Terrain);
-    }
-    
-    private static void SpawnMarshmallows(int number, Vector3 campfirePosition)
-    {
-        ItemDatabase itemDatabase = SingletonAsset<ItemDatabase>.Instance;
-        Item marshmallowItem = itemDatabase.itemLookup[46];
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} " + marshmallowItem.GetName());
-        marshmallowItem.GetName();
-        List<Vector3> marshmallowPositions = GetEvenlySpacedPointsAroundCampfire(number, 2.5f, 3, campfirePosition);
-        foreach (Vector3 marshmallowPosition in marshmallowPositions)
-        {
-            Add(marshmallowItem, marshmallowPosition);
-        }
-        Logger.LogInfo($"Plugin {MyPluginInfo.PLUGIN_GUID} added with position: " + marshmallowItem.GetName());
+        return HelperFunctions.GetGroundPos(vector, HelperFunctions.LayerType.Default);
     }
     
     private static void Add(Item item, Vector3 position)
@@ -179,21 +162,22 @@ public class Plugin : BaseUnityPlugin
                 amountOfMarshmallowsToSpawn = _cheatExtraMarshmallows - vanillaMaxPlayers;
                 if (currentPlayers < vanillaMaxPlayers)
                 {
-                    amountOfMarshmallowsToSpawn = _cheatExtraMarshmallows - currentPlayers + 1;
+                    amountOfMarshmallowsToSpawn = _cheatExtraMarshmallows - currentPlayers;
                 }
             }
+            
             Plugin.Logger.LogInfo("Start of campfire patch!");
-            if (currentPlayers > vanillaMaxPlayers || _cheatExtraMarshmallows != 0)
+            if (PhotonNetwork.IsMasterClient && (currentPlayers > vanillaMaxPlayers || _cheatExtraMarshmallows != 0))
             {
                 Logger.LogInfo("More than 4 players, preparing to marshmallowify! Number: " + currentPlayers);
                 Vector3 position = __instance.gameObject.transform.position;
                 Logger.LogInfo("Spawning " + amountOfMarshmallowsToSpawn + " marshmallows!");
-                Plugin.spawnMarshmallows(amountOfMarshmallowsToSpawn, position);
+                Plugin.spawnMarshmallows(amountOfMarshmallowsToSpawn, position, __instance.advanceToSegment);
                 Logger.LogInfo("End of campfire patch!");
             }
             else
             {
-                Logger.LogInfo("Not enough players for campfire patch!");
+                Logger.LogInfo("Not enough players for campfire patch or not host!");
             }
         }
     }
