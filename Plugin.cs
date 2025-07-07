@@ -320,12 +320,65 @@ public partial class Plugin : BaseUnityPlugin
                 bool withinExisting = i < __instance.scouts.Length;
                 if (!withinExisting)
                 {
-                    newScoutWindows[i] = Instantiate(__instance.scoutWindows[0], __instance.scoutWindows[i].transform.parent);
-                    newScouts[i] = Instantiate(__instance.scouts[0], __instance.scoutWindows[i].transform.parent);
-                    newScoutsAtPeak[i] = Instantiate(__instance.scoutsAtPeak[0], __instance.scoutWindows[i].transform.parent);
-                    newOldPip[i] = Instantiate(__instance.oldPip[0], __instance.scoutWindows[i].transform.parent);
-                    newScoutLines[i] = Instantiate(__instance.scoutLines[0], __instance.scoutWindows[i].transform.parent);
-                }
+                    if ((UnityEngine.Object)__instance.scoutWindows[0] == null)
+                    {
+                        newScoutWindows[i] = null;
+                    }
+                    else
+                    {
+                        newScoutWindows[i] = Instantiate(
+                            __instance.scoutWindows[0],
+                            __instance.scoutWindows[0].transform.parent
+                        );
+                    }
+                    
+                    if ((UnityEngine.Object)__instance.scouts[0] == null)
+                    {
+                        newScouts[i] = null;
+                    }
+                    else
+                    {
+                        newScouts[i] = Instantiate(
+                            __instance.scouts[0],
+                            __instance.scouts[0].transform.parent
+                        );
+                    }
+                    
+                    if ((UnityEngine.Object)__instance.scoutsAtPeak[0] == null)
+                    {
+                        newScoutsAtPeak[i] = null;
+                    }
+                    else
+                    {
+                        newScoutsAtPeak[i] = Instantiate(
+                            __instance.scoutsAtPeak[0],
+                            __instance.scoutsAtPeak[0].transform.parent
+                        );
+                    }
+                    
+                    if ((UnityEngine.Object)__instance.oldPip[0] == null)
+                    {
+                        newOldPip[i] = null;
+                    }
+                    else
+                    {
+                        newOldPip[i] = Instantiate(
+                            __instance.oldPip[0],
+                            __instance.oldPip[0].transform.parent
+                        );
+                    }
+                    
+                    if ((UnityEngine.Object)__instance.scoutLines[0] == null)
+                    {
+                        newScoutLines[i] = null;
+                    }
+                    else
+                    {
+                        newScoutLines[i] = Instantiate(
+                            __instance.scoutLines[0],
+                            __instance.scoutLines[0].transform.parent
+                        );
+                    }}
                 else
                 {
                     newScoutWindows[i] = __instance.scoutWindows[i];
