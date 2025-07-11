@@ -28,6 +28,8 @@ public partial class Plugin : BaseUnityPlugin
     private static bool _extraMarshmallows;
     private static ConfigEntry<int> _configMaxPlayers;
     private static ConfigEntry<int> _configCheatExtraMarshmallows;
+    private static ConfigEntry<int> _configCheatExtraBackpacks;
+    private static ConfigEntry<bool> _configExtraBackpacks;
     private static ConfigEntry<bool> _configExtraMarshmallows;
     private static ConfigEntry<bool> _configLateMarshmallows;
     private static int _numberOfPlayers = 1;
@@ -60,6 +62,14 @@ public partial class Plugin : BaseUnityPlugin
         );
         _extraMarshmallows = _configExtraMarshmallows.Value;
         
+        _configExtraBackpacks = Config.Bind
+        (
+            "General",
+            "ExtraBackpacks",
+            true,
+            "Controls whether additional backpacks have a chance to be spawned for extra players"
+        );
+        
         _configLateMarshmallows = Config.Bind
         (
             "General",
@@ -73,7 +83,20 @@ public partial class Plugin : BaseUnityPlugin
             "General",
             "Cheat Marshmallows",
             0,
-            "(Cheat, disabled by default) This will set the desired amount of marshmallows to the campfires as a cheat, requires ExtraMarshmallows to be enabled."
+            "(Cheat, disabled by default) This will set the desired amount of marshmallows to the campfires as a cheat, requires ExtraMarshmallows to be enabled. Capped at 30."
+        );
+        _cheatExtraMarshmallows = _configCheatExtraMarshmallows.Value;
+        if (_cheatExtraMarshmallows > 30)
+        {
+            _cheatExtraMarshmallows = 30;
+        }
+        
+        _configCheatExtraBackpacks = Config.Bind
+        (
+            "General",
+            "Cheat Backpacks",
+            0,
+            "(Cheat, disabled by default) Sets how many backpacks will spawn as a cheat, requires ExtraBackpacks to also be enabled. Capped at 10."
         );
         _cheatExtraMarshmallows = _configCheatExtraMarshmallows.Value;
         
@@ -121,17 +144,8 @@ public partial class Plugin : BaseUnityPlugin
             float angle = i * Mathf.PI * 2f / numPoints; // Even spacing: 2π / n
             float x = radius * Mathf.Cos(angle);
             float z = radius * Mathf.Sin(angle);
-            if (advanceToSegment == Segment.Caldera)
-            {
-                points.Add(new Vector3(x, -0.5f, z) + campfirePosition);
-            } else if (advanceToSegment == Segment.TheKiln)
-            {
-                points.Add(new Vector3(x, -1f, z) + campfirePosition);
-            }
-            else
-            {
-                points.Add(SetToGround(new Vector3(x, 0f, z) + campfirePosition));
-            }
+            
+            points.Add(SetToGround(new Vector3(x, 0f, z) + campfirePosition));
         }
         
         return points;
@@ -140,7 +154,7 @@ public partial class Plugin : BaseUnityPlugin
     private static List<GameObject> spawnMarshmallows(int number, Vector3 campfirePosition, Segment advanceToSegment)
     {
         List<GameObject> marshmallows = new List<GameObject>();
-        Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[(ushort) 46];
+        Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[46];
         Logger.LogInfo((object) ("Plugin PeakUnlimited " + obj.GetName()));
         obj.GetName();
         foreach (Vector3 position in GetEvenlySpacedPointsAroundCampfire(number, 2.5f, 3f, campfirePosition,
@@ -154,7 +168,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private static Vector3 SetToGround(Vector3 vector)
     {
-        return HelperFunctions.GetGroundPos(vector, HelperFunctions.LayerType.Default);
+        return HelperFunctions.GetGroundPos(vector, HelperFunctions.LayerType.TerrainMap);
     }
     
     private static Item Add(Item item, Vector3 position)
@@ -173,9 +187,61 @@ public partial class Plugin : BaseUnityPlugin
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
+            
+            
+            //Backpack addition
+            if (_configExtraBackpacks.Value)
+            {
+                Logger.LogInfo("Backpackification enabled and starting!");
+                Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[6];
+                int numberOfExtraPlayers = _numberOfPlayers - vanillaMaxPlayers;
+                int number = 0;
+                if (numberOfExtraPlayers > 0) {
+                    double backpackNumber = numberOfExtraPlayers * 0.25;
+                    
+                    if (backpackNumber % 4 == 0)
+                    {
+                        number = (int)backpackNumber;
+                    }
+                    else
+                    {
+                        number = (int)backpackNumber;
+                        if (Random.Range(0f, 1f) <= backpackNumber - number)
+                        {
+                            number++;
+                        }
+                    }
+                }
+                if (_configCheatExtraBackpacks.Value > 0 && _configCheatExtraBackpacks.Value <= 10)
+                {
+                    number = _configCheatExtraBackpacks.Value - 1; //Minus one as there is already a backpack present
+                }
+
+                if (number > 0)
+                {
+                    foreach (Vector3 position in GetEvenlySpacedPointsAroundCampfire(number, 3.3f, 3.7f,
+                                 __instance.gameObject.transform.position,
+                                 __instance.advanceToSegment))
+                    {
+                        Vector3 finalPosition = position;
+                        if (__instance.gameObject.transform.parent.gameObject.name.ToLower().Contains("wings"))
+                        {
+                            finalPosition =
+                                position + new Vector3(0, 10f, 0f); // stops backpacks on the beach spawning underground...
+                        }
+                        Add(obj, finalPosition).transform.parent = __instance.gameObject.transform;
+                    }
+                }
+                else
+                {
+                    Logger.LogInfo("Not enough players to add additional backpacks, use the Cheat Backpack configuration setting if you want to override this!");
+                }
+            }
+            //End of backpack addition
+            
+            //Marshmallow addition
             if (__instance.gameObject.transform.parent.gameObject.name.ToLower().Contains("wings"))
             {
-                Logger.LogInfo("Skipping plane campfire...");
                 return;
             }
             campfireList.Add(__instance);
@@ -196,18 +262,16 @@ public partial class Plugin : BaseUnityPlugin
             {
                 Logger.LogInfo("More than 4 players, preparing to marshmallowify! Number: " + _numberOfPlayers);
                 Vector3 position = __instance.gameObject.transform.position;
-                Logger.LogInfo("Spawning " + amountOfMarshmallowsToSpawn + " marshmallows!");
                 marshmallows.Add(__instance, spawnMarshmallows(amountOfMarshmallowsToSpawn, position, __instance.advanceToSegment));
-                Logger.LogInfo("End of campfire patch!");
             }
             else
             {
-                Logger.LogInfo("Not enough players for campfire patch or not host!");
+                Logger.LogInfo("Not enough players for extra marshmallows, use the extra marshmallows cheat configuration option to override this!");
             }
             isAfterAwake = true;
         }
     }
-    
+
     public class OnPlayerEnteredRoomPatch
     {
         [HarmonyPatch(typeof(PlayerConnectionLog), "OnPlayerEnteredRoom")]
