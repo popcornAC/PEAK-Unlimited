@@ -1,11 +1,15 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
-using UnityEngine.UI;
+// <copyright file="PluginTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace PEAKUnlimited.Tests
 {
+    using System.Collections.Generic;
+    using System.Reflection;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using UnityEngine;
+    using UnityEngine.UI;
+
     [TestClass]
     public class PluginTests
     {
@@ -27,7 +31,7 @@ namespace PEAKUnlimited.Tests
             float innerRadius = 2.5f;
             float outerRadius = 3.0f;
 
-            var points = Plugin.GetEvenlySpacedPointsAroundCampfire(numPoints, innerRadius, outerRadius, campfirePosition, new Segment());
+            var points = Plugin.GetEvenlySpacedPointsAroundCampfire(numPoints, innerRadius, outerRadius, campfirePosition, default(Segment));
 
             Assert.AreEqual(numPoints, points.Count, "Should return exactly the requested number of points");
 
@@ -35,7 +39,8 @@ namespace PEAKUnlimited.Tests
             foreach (var point in points)
             {
                 float distance = Vector3.Distance(campfirePosition, point);
-                Assert.IsTrue(distance >= innerRadius && distance <= outerRadius,
+                Assert.IsTrue(
+                    distance >= innerRadius && distance <= outerRadius,
                     $"Point {point} should be within radius {innerRadius}-{outerRadius}, but was {distance}");
             }
         }
@@ -127,12 +132,14 @@ namespace PEAKUnlimited.Tests
     public class EndScreen
     {
         private Image[] oldPip = new Image[4];
-        public Image[] scouts = new Image[4];
-        public Image[] scoutsAtPeak = new Image[4];
-        public EndScreenScoutWindow[] scoutWindows = new EndScreenScoutWindow[4];
-        public Transform[] scoutLines = new Transform[4];
+        public Image[] Scouts = new Image[4];
+        public Image[] ScoutsAtPeak = new Image[4];
+        public EndScreenScoutWindow[] ScoutWindows = new EndScreenScoutWindow[4];
+        public Transform[] ScoutLines = new Transform[4];
     }
 
     // Mock classes for testing
-    public class EndScreenScoutWindow { }
+    public class EndScreenScoutWindow
+    {
+    }
 }

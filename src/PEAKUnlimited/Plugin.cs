@@ -1,3 +1,5 @@
+namespace PEAKUnlimited;
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -9,8 +11,6 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 using Zorro.Core;
-
-namespace PEAKUnlimited;
 
 // Here are some basic resources on code style and naming conventions to help
 // you in your first CSharp plugin!
@@ -25,18 +25,18 @@ namespace PEAKUnlimited;
 public partial class Plugin : BaseUnityPlugin
 {
     internal static new ManualLogSource Logger;
-    private static int _newMaxPlayers;
-    private static int _cheatExtraMarshmallows;
-    private static int _cheatExtraBackpacks;
-    private static bool _extraMarshmallows;
-    private static ConfigEntry<int> _configMaxPlayers;
-    private static ConfigEntry<int> _configCheatExtraMarshmallows;
-    private static ConfigEntry<int> _configCheatExtraBackpacks;
-    private static ConfigEntry<bool> _configExtraBackpacks;
-    private static ConfigEntry<bool> _configExtraMarshmallows;
-    private static ConfigEntry<bool> _configLateMarshmallows;
-    private static int _numberOfPlayers = 1;
-    private readonly Harmony _harmony = new Harmony(Id);
+    private static int newMaxPlayers;
+    private static int cheatExtraMarshmallows;
+    private static int cheatExtraBackpacks;
+    private static bool extraMarshmallows;
+    private static ConfigEntry<int> configMaxPlayers;
+    private static ConfigEntry<int> configCheatExtraMarshmallows;
+    private static ConfigEntry<int> configCheatExtraBackpacks;
+    private static ConfigEntry<bool> configExtraBackpacks;
+    private static ConfigEntry<bool> configExtraMarshmallows;
+    private static ConfigEntry<bool> configLateMarshmallows;
+    private static int numberOfPlayers = 1;
+    private readonly Harmony harmony = new Harmony(Id);
     private static List<Campfire> campfireList = new List<Campfire>();
     private static bool isAfterAwake = false;
     private static int vanillaMaxPlayers = 4;
@@ -55,94 +55,83 @@ public partial class Plugin : BaseUnityPlugin
             Logger.LogWarning("Could not find oldPip field in EndScreen class - end screen UI may not display correctly for extra players.");
         }
 
-        _configMaxPlayers = Config.Bind
-        (
+        configMaxPlayers = this.Config.Bind(
             "General",
             "MaxPlayers",
             20,
-            "The maximum number of players you want to be able to join your lobby (Including yourself). Warning: untested, higher numbers may be unstable! Range: 1-20"
-        );
-        _newMaxPlayers = _configMaxPlayers.Value;
+            "The maximum number of players you want to be able to join your lobby (Including yourself). Warning: untested, higher numbers may be unstable! Range: 1-20");
+        newMaxPlayers = configMaxPlayers.Value;
 
-        _configExtraMarshmallows = Config.Bind
-        (
+        configExtraMarshmallows = this.Config.Bind(
             "General",
             "ExtraMarshmallows",
             true,
-            "Controls whether additional marshmallows are spawned for the extra players"
-        );
-        _extraMarshmallows = _configExtraMarshmallows.Value;
+            "Controls whether additional marshmallows are spawned for the extra players");
+        extraMarshmallows = configExtraMarshmallows.Value;
 
-        _configExtraBackpacks = Config.Bind
-        (
+        configExtraBackpacks = this.Config.Bind(
             "General",
             "ExtraBackpacks",
             true,
-            "Controls whether additional backpacks have a chance to be spawned for extra players"
-        );
+            "Controls whether additional backpacks have a chance to be spawned for extra players");
 
-        _configLateMarshmallows = Config.Bind
-        (
+        configLateMarshmallows = this.Config.Bind(
             "General",
             "LateJoinMarshmallows",
             false,
-            "Controls whether additional marshmallows are spawned for players who join late (mid run), and removed for those who leave early (Experimental + Untested)"
-        );
+            "Controls whether additional marshmallows are spawned for players who join late (mid run), and removed for those who leave early (Experimental + Untested)");
 
-        _configCheatExtraMarshmallows = Config.Bind
-        (
+        configCheatExtraMarshmallows = this.Config.Bind(
             "General",
             "Cheat Marshmallows",
             0,
-            "(Cheat, disabled by default) This will set the desired amount of marshmallows to the campfires as a cheat, requires ExtraMarshmallows to be enabled. Capped at 30."
-        );
-        _cheatExtraMarshmallows = _configCheatExtraMarshmallows.Value;
-        if (_cheatExtraMarshmallows > 30)
+            "(Cheat, disabled by default) This will set the desired amount of marshmallows to the campfires as a cheat, requires ExtraMarshmallows to be enabled. Capped at 30.");
+        cheatExtraMarshmallows = configCheatExtraMarshmallows.Value;
+        if (cheatExtraMarshmallows > 30)
         {
-            _cheatExtraMarshmallows = 30;
+            cheatExtraMarshmallows = 30;
         }
 
-        _configCheatExtraBackpacks = Config.Bind
-        (
+        configCheatExtraBackpacks = this.Config.Bind(
             "General",
             "Cheat Backpacks",
             0,
-            "(Cheat, disabled by default) Sets how many backpacks will spawn as a cheat, requires ExtraBackpacks to also be enabled. Capped at 10."
-        );
-        _cheatExtraBackpacks = _configCheatExtraBackpacks.Value;
+            "(Cheat, disabled by default) Sets how many backpacks will spawn as a cheat, requires ExtraBackpacks to also be enabled. Capped at 10.");
+        cheatExtraBackpacks = configCheatExtraBackpacks.Value;
 
-        if (_cheatExtraBackpacks > 10)
+        if (cheatExtraBackpacks > 10)
         {
-            _cheatExtraBackpacks = 10;
+            cheatExtraBackpacks = 10;
         }
 
-        if (_newMaxPlayers == 0)
+        if (newMaxPlayers == 0)
         {
-            _newMaxPlayers = 1;
+            newMaxPlayers = 1;
         }
-        else if (_newMaxPlayers > 30)
+        else if (newMaxPlayers > 30)
         {
-            _newMaxPlayers = 30;
+            newMaxPlayers = 30;
         }
 
-        NetworkConnector.MAX_PLAYERS = _newMaxPlayers;
+        NetworkConnector.MAX_PLAYERS = newMaxPlayers;
         Logger.LogInfo($"Plugin {Id} set the Max Players to " + NetworkConnector.MAX_PLAYERS + "!");
         Logger.LogInfo($"Plugin {Id} is patching!");
-        if (_extraMarshmallows)
+        if (extraMarshmallows)
         {
             Logger.LogInfo($"Plugin {Id} extra marshmallows are enabled!");
-            _harmony.PatchAll(typeof(AwakePatch));
+            this.harmony.PatchAll(typeof(AwakePatch));
             Logger.LogInfo($"Plugin {Id} late marshmallows are enabled!");
             Logger.LogInfo($"Plugin {Id} left patch enabled!");
-            _harmony.PatchAll(typeof(OnPlayerLeftRoomPatch));
+            this.harmony.PatchAll(typeof(OnPlayerLeftRoomPatch));
             Logger.LogInfo($"Plugin {Id} joined patch enabled!");
-            _harmony.PatchAll(typeof(OnPlayerEnteredRoomPatch));
+            this.harmony.PatchAll(typeof(OnPlayerEnteredRoomPatch));
         }
+
         Logger.LogInfo($"Plugin {Id} patching end screen!");
-        _harmony.PatchAll(typeof(EndSequenceRoutinePatch));
-        _harmony.PatchAll(typeof(WaitingForPlayersUIPatch));
-        _harmony.PatchAll(typeof(EndScreenStartPatch));
-        _harmony.PatchAll(typeof(EndScreenNextPatch));
+        this.harmony.PatchAll(typeof(EndSequenceRoutinePatch));
+        this.harmony.PatchAll(typeof(WaitingForPlayersUIPatch));
+        this.harmony.PatchAll(typeof(EndScreenStartPatch));
+        this.harmony.PatchAll(typeof(EndScreenNextPatch));
         Logger.LogInfo($"Plugin {Id} has patched!");
     }
 
@@ -168,7 +157,7 @@ public partial class Plugin : BaseUnityPlugin
         return points;
     }
 
-    private static List<GameObject> spawnMarshmallows(int number, Vector3 campfirePosition, Segment advanceToSegment)
+    private static List<GameObject> SpawnMarshmallows(int number, Vector3 campfirePosition, Segment advanceToSegment)
     {
         List<GameObject> marshmallows = new List<GameObject>();
         Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[46];
@@ -179,6 +168,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             marshmallows.Add(Add(obj, position).gameObject);
         }
+
         Logger.LogInfo((object)("Plugin PeakUnlimited added with position: " + obj.GetName()));
         return marshmallows;
     }
@@ -216,6 +206,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             newArray[i] = originalArray[i];
         }
+
         return newArray;
     }
 
@@ -225,13 +216,17 @@ public partial class Plugin : BaseUnityPlugin
         {
             return cheatMarshmallows - vanillaMaxPlayers;
         }
+
         return Math.Max(0, currentPlayers - vanillaMaxPlayers);
     }
 
     public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers)
     {
         int extraPlayers = currentPlayers - vanillaMaxPlayers;
-        if (extraPlayers <= 0) return 0;
+        if (extraPlayers <= 0)
+        {
+            return 0;
+        }
 
         double backpackChance = extraPlayers * 0.25;
         return (int)backpackChance;
@@ -240,7 +235,10 @@ public partial class Plugin : BaseUnityPlugin
     private static Item Add(Item item, Vector3 position)
     {
         if (!PhotonNetwork.IsConnected)
+        {
             return null;
+        }
+
         Logger.LogInfo((object)string.Format("Spawn item: {0} at {1}", (object)item, (object)position));
         return PhotonNetwork.Instantiate("0_Items/" + item.name, position, Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f)).GetComponent<Item>();
     }
@@ -249,18 +247,19 @@ public partial class Plugin : BaseUnityPlugin
     {
         [HarmonyPatch(typeof(Campfire), "Awake")]
         [HarmonyPostfix]
-        static void Postfix(Campfire __instance)
+        private static void Postfix(Campfire instance)
         {
             if (!PhotonNetwork.IsMasterClient)
+            {
                 return;
+            }
 
-
-            //Backpack addition
-            if (_configExtraBackpacks.Value)
+            // Backpack addition
+            if (configExtraBackpacks.Value)
             {
                 Logger.LogInfo("Backpackification enabled and starting!");
                 Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[6];
-                int numberOfExtraPlayers = _numberOfPlayers - vanillaMaxPlayers;
+                int numberOfExtraPlayers = numberOfPlayers - vanillaMaxPlayers;
                 int number = 0;
                 if (numberOfExtraPlayers > 0)
                 {
@@ -279,24 +278,26 @@ public partial class Plugin : BaseUnityPlugin
                         }
                     }
                 }
-                if (_cheatExtraBackpacks > 0 && _cheatExtraBackpacks <= 10)
+
+                if (cheatExtraBackpacks > 0 && cheatExtraBackpacks <= 10)
                 {
-                    number = _cheatExtraBackpacks - 1; //Minus one as there is already a backpack present
+                    number = cheatExtraBackpacks - 1; // Minus one as there is already a backpack present
                 }
 
                 if (number > 0)
                 {
                     foreach (Vector3 position in GetEvenlySpacedPointsAroundCampfire(number, 3.3f, 3.7f,
-                                 __instance.gameObject.transform.position,
-                                 __instance.advanceToSegment))
+                                 instance.gameObject.transform.position,
+                                 instance.advanceToSegment))
                     {
                         Vector3 finalPosition = position;
-                        if (__instance.gameObject.transform.parent.gameObject.name.ToLower().Contains("wings"))
+                        if (instance.gameObject.transform.parent.gameObject.name.ToLower().Contains("wings"))
                         {
                             finalPosition =
                                 position + new Vector3(0, 10f, 0f); // stops backpacks on the beach spawning underground...
                         }
-                        Add(obj, finalPosition).transform.parent = __instance.gameObject.transform;
+
+                        Add(obj, finalPosition).transform.parent = instance.gameObject.transform;
                     }
                 }
                 else
@@ -304,37 +305,40 @@ public partial class Plugin : BaseUnityPlugin
                     Logger.LogInfo("Not enough players to add additional backpacks, use the Cheat Backpack configuration setting if you want to override this!");
                 }
             }
-            //End of backpack addition
 
-            //Marshmallow addition
-            if (__instance.gameObject.transform.parent.gameObject.name.ToLower().Contains("wings"))
+            // End of backpack addition
+
+            // Marshmallow addition
+            if (instance.gameObject.transform.parent.gameObject.name.ToLower().Contains("wings"))
             {
                 return;
             }
-            campfireList.Add(__instance);
+
+            campfireList.Add(instance);
             Logger.LogInfo("Marshmellowifying campfire...!");
-            int amountOfMarshmallowsToSpawn = _numberOfPlayers - vanillaMaxPlayers;
-            if (_cheatExtraMarshmallows != 0)
+            int amountOfMarshmallowsToSpawn = numberOfPlayers - vanillaMaxPlayers;
+            if (cheatExtraMarshmallows != 0)
             {
                 Logger.LogInfo("Adding cheatmellows!");
-                amountOfMarshmallowsToSpawn = _cheatExtraMarshmallows - vanillaMaxPlayers;
-                if (_numberOfPlayers < vanillaMaxPlayers)
+                amountOfMarshmallowsToSpawn = cheatExtraMarshmallows - vanillaMaxPlayers;
+                if (numberOfPlayers < vanillaMaxPlayers)
                 {
-                    amountOfMarshmallowsToSpawn = _cheatExtraMarshmallows - _numberOfPlayers;
+                    amountOfMarshmallowsToSpawn = cheatExtraMarshmallows - numberOfPlayers;
                 }
             }
 
             Plugin.Logger.LogInfo("Start of campfire patch!");
-            if (PhotonNetwork.IsMasterClient && (_numberOfPlayers > vanillaMaxPlayers || _cheatExtraMarshmallows != 0))
+            if (PhotonNetwork.IsMasterClient && (numberOfPlayers > vanillaMaxPlayers || cheatExtraMarshmallows != 0))
             {
-                Logger.LogInfo("More than 4 players, preparing to marshmallowify! Number: " + _numberOfPlayers);
-                Vector3 position = __instance.gameObject.transform.position;
-                marshmallows.Add(__instance, spawnMarshmallows(amountOfMarshmallowsToSpawn, position, __instance.advanceToSegment));
+                Logger.LogInfo("More than 4 players, preparing to marshmallowify! Number: " + numberOfPlayers);
+                Vector3 position = instance.gameObject.transform.position;
+                marshmallows.Add(instance, SpawnMarshmallows(amountOfMarshmallowsToSpawn, position, instance.advanceToSegment));
             }
             else
             {
                 Logger.LogInfo("Not enough players for extra marshmallows, use the extra marshmallows cheat configuration option to override this!");
             }
+
             isAfterAwake = true;
         }
     }
@@ -343,20 +347,24 @@ public partial class Plugin : BaseUnityPlugin
     {
         [HarmonyPatch(typeof(PlayerConnectionLog), "OnPlayerEnteredRoom")]
         [HarmonyPostfix]
-        static void Postfix(PlayerConnectionLog __instance)
+        private static void Postfix(PlayerConnectionLog instance)
         {
-            _numberOfPlayers++;
-            Logger.LogInfo("Someone has joined the room! Number: " + _numberOfPlayers + "/" + NetworkConnector.MAX_PLAYERS);
-            //Add a marshmallow at each campfire for the new player
-            if (!_configLateMarshmallows.Value)
+            numberOfPlayers++;
+            Logger.LogInfo("Someone has joined the room! Number: " + numberOfPlayers + "/" + NetworkConnector.MAX_PLAYERS);
+
+            // Add a marshmallow at each campfire for the new player
+            if (!configLateMarshmallows.Value)
+            {
                 return;
-            if (isAfterAwake && PhotonNetwork.IsMasterClient && _numberOfPlayers > vanillaMaxPlayers && _cheatExtraMarshmallows == 0)
+            }
+
+            if (isAfterAwake && PhotonNetwork.IsMasterClient && numberOfPlayers > vanillaMaxPlayers && cheatExtraMarshmallows == 0)
             {
                 foreach (Campfire campfire in campfireList)
                 {
                     Vector3 position = campfire.gameObject.transform.position;
                     Logger.LogInfo("Spawning a marshmallow!");
-                    marshmallows[campfire].Add(spawnMarshmallows(1, position, campfire.advanceToSegment)[0]);
+                    marshmallows[campfire].Add(SpawnMarshmallows(1, position, campfire.advanceToSegment)[0]);
                 }
             }
         }
@@ -366,17 +374,21 @@ public partial class Plugin : BaseUnityPlugin
     {
         [HarmonyPatch(typeof(PlayerConnectionLog), "OnPlayerLeftRoom")]
         [HarmonyPostfix]
-        static void Postfix(PlayerConnectionLog __instance)
+        private static void Postfix(PlayerConnectionLog instance)
         {
-            _numberOfPlayers--;
-            if (_numberOfPlayers < 0)
+            numberOfPlayers--;
+            if (numberOfPlayers < 0)
             {
-                _numberOfPlayers = 0;
+                numberOfPlayers = 0;
             }
-            Logger.LogInfo("Someone has left the room! Number: " + _numberOfPlayers + "/" + NetworkConnector.MAX_PLAYERS);
-            if (!_configLateMarshmallows.Value)
+
+            Logger.LogInfo("Someone has left the room! Number: " + numberOfPlayers + "/" + NetworkConnector.MAX_PLAYERS);
+            if (!configLateMarshmallows.Value)
+            {
                 return;
-            if (isAfterAwake && PhotonNetwork.IsMasterClient && _numberOfPlayers >= vanillaMaxPlayers && _cheatExtraMarshmallows == 0)
+            }
+
+            if (isAfterAwake && PhotonNetwork.IsMasterClient && numberOfPlayers >= vanillaMaxPlayers && cheatExtraMarshmallows == 0)
             {
                 Logger.LogInfo("Removing a marshmallow!");
                 foreach (Campfire campfire in campfireList)
@@ -396,24 +408,28 @@ public partial class Plugin : BaseUnityPlugin
     {
         [HarmonyPatch(typeof(WaitingForPlayersUI), "Update")]
         [HarmonyPrefix]
-        static void Prefix(WaitingForPlayersUI __instance)
+        private static void Prefix(WaitingForPlayersUI instance)
         {
-            if (__instance.scoutImages.Length >= Character.AllCharacters.Count)
+            if (instance.scoutImages.Length >= Character.AllCharacters.Count)
+            {
                 return;
+            }
+
             var newScoutImages = new Image[Character.AllCharacters.Count];
-            Image original = __instance.scoutImages[0];
+            Image original = instance.scoutImages[0];
             for (int i = 0; i < Character.AllCharacters.Count; i++)
             {
                 if (i < vanillaMaxPlayers)
                 {
-                    newScoutImages[i] = __instance.scoutImages[i];
+                    newScoutImages[i] = instance.scoutImages[i];
                 }
                 else
                 {
                     newScoutImages[i] = Instantiate(original, original.transform.parent);
                 }
             }
-            __instance.scoutImages = newScoutImages;
+
+            instance.scoutImages = newScoutImages;
         }
     }
 
@@ -434,10 +450,12 @@ public partial class Plugin : BaseUnityPlugin
     {
         [HarmonyPatch(typeof(EndScreen), "Start")]
         [HarmonyPrefix]
-        static void Prefix(EndScreen __instance)
+        private static void Prefix(EndScreen instance)
         {
             if (Character.AllCharacters.Count <= vanillaMaxPlayers)
+            {
                 return;
+            }
 
             var newScoutWindows = new EndScreenScoutWindow[Character.AllCharacters.Count];
             var newScouts = new Image[Character.AllCharacters.Count];
@@ -446,48 +464,45 @@ public partial class Plugin : BaseUnityPlugin
             var newScoutLines = new Transform[Character.AllCharacters.Count];
 
             // Get the oldPip array once to avoid repeated reflection calls
-            var oldPipArray = oldPipField?.GetValue(__instance) as Image[];
+            var oldPipArray = oldPipField?.GetValue(instance) as Image[];
 
             for (int i = 0; i < Character.AllCharacters.Count; i++)
             {
-                //Don't do anything to the original ones
-                bool withinExisting = i < __instance.scouts.Length;
+                // Don't do anything to the original ones
+                bool withinExisting = i < instance.scouts.Length;
                 if (!withinExisting)
                 {
-                    if ((UnityEngine.Object)__instance.scoutWindows[0] == null)
+                    if ((UnityEngine.Object)instance.scoutWindows[0] == null)
                     {
                         newScoutWindows[i] = null;
                     }
                     else
                     {
                         newScoutWindows[i] = Instantiate(
-                            __instance.scoutWindows[0],
-                            __instance.scoutWindows[0].transform.parent
-                        );
+                            instance.scoutWindows[0],
+                            instance.scoutWindows[0].transform.parent);
                     }
 
-                    if ((UnityEngine.Object)__instance.scouts[0] == null)
+                    if ((UnityEngine.Object)instance.scouts[0] == null)
                     {
                         newScouts[i] = null;
                     }
                     else
                     {
                         newScouts[i] = Instantiate(
-                            __instance.scouts[0],
-                            __instance.scouts[0].transform.parent
-                        );
+                            instance.scouts[0],
+                            instance.scouts[0].transform.parent);
                     }
 
-                    if ((UnityEngine.Object)__instance.scoutsAtPeak[0] == null)
+                    if ((UnityEngine.Object)instance.scoutsAtPeak[0] == null)
                     {
                         newScoutsAtPeak[i] = null;
                     }
                     else
                     {
                         newScoutsAtPeak[i] = Instantiate(
-                            __instance.scoutsAtPeak[0],
-                            __instance.scoutsAtPeak[0].transform.parent
-                        );
+                            instance.scoutsAtPeak[0],
+                            instance.scoutsAtPeak[0].transform.parent);
                     }
 
                     if (oldPipArray == null || oldPipArray.Length == 0 || (UnityEngine.Object)oldPipArray[0] == null)
@@ -498,38 +513,36 @@ public partial class Plugin : BaseUnityPlugin
                     {
                         newOldPip[i] = Instantiate(
                             oldPipArray[0],
-                            oldPipArray[0].transform.parent
-                        );
+                            oldPipArray[0].transform.parent);
                     }
 
-                    if ((UnityEngine.Object)__instance.scoutLines[0] == null)
+                    if ((UnityEngine.Object)instance.scoutLines[0] == null)
                     {
                         newScoutLines[i] = null;
                     }
                     else
                     {
                         newScoutLines[i] = Instantiate(
-                            __instance.scoutLines[0],
-                            __instance.scoutLines[0].transform.parent
-                        );
+                            instance.scoutLines[0],
+                            instance.scoutLines[0].transform.parent);
                     }
                 }
                 else
                 {
-                    newScoutWindows[i] = __instance.scoutWindows[i];
-                    newScouts[i] = __instance.scouts[i];
-                    newScoutsAtPeak[i] = __instance.scoutsAtPeak[i];
+                    newScoutWindows[i] = instance.scoutWindows[i];
+                    newScouts[i] = instance.scouts[i];
+                    newScoutsAtPeak[i] = instance.scoutsAtPeak[i];
                     newOldPip[i] = oldPipArray != null && i < oldPipArray.Length ? oldPipArray[i] : null;
-                    newScoutLines[i] = __instance.scoutLines[i];
+                    newScoutLines[i] = instance.scoutLines[i];
                 }
             }
 
-            //Reassign arrays with new ones
-            __instance.scoutWindows = newScoutWindows;
-            __instance.scouts = newScouts;
-            __instance.scoutsAtPeak = newScoutsAtPeak;
-            oldPipField?.SetValue(__instance, newOldPip);
-            __instance.scoutLines = newScoutLines;
+            // Reassign arrays with new ones
+            instance.scoutWindows = newScoutWindows;
+            instance.scouts = newScouts;
+            instance.scoutsAtPeak = newScoutsAtPeak;
+            oldPipField?.SetValue(instance, newOldPip);
+            instance.scoutLines = newScoutLines;
         }
     }
 
@@ -537,13 +550,14 @@ public partial class Plugin : BaseUnityPlugin
     {
         [HarmonyPatch(typeof(EndScreen), "EndSequenceRoutine")]
         [HarmonyPostfix]
-        static void Postfix(EndScreen __instance)
+        private static void Postfix(EndScreen instance)
         {
             for (int i = 4; i < Character.AllCharacters.Count; i++)
             {
                 Logger.LogInfo("Deactivating an end screen");
-                //Don't display the extra names since it blocks the chart
-                Destroy(__instance.scoutWindows[i].gameObject);
+
+                // Don't display the extra names since it blocks the chart
+                Destroy(instance.scoutWindows[i].gameObject);
                 Logger.LogInfo("Deleted an end screen");
             }
         }
