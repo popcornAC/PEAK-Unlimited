@@ -7,8 +7,8 @@ repository = "https://thunderstore.io"
 [package]
 namespace = "glarmer"
 name = "PEAKUnlimited"
-description = "TODO: Fill in short mod description."
-websiteUrl = "" # TODO: Add a link to your mod repository here (optional)
+description = "Unlocks the max player cap for playing with more than 4 friends! (Now with extra marshmallows!)"
+websiteUrl = "https://github.com/glarmer/PEAK-Unlimited/"
 containsNsfwContent = false
 
 [package.dependencies]
@@ -41,4 +41,4 @@ communities = [ "peak", ]
 [publish.categories]
 # See categories at:
 # https://thunderstore.io/api/experimental/community/peak/category/
-peak = [ "mods", ]
+peak = [ "mods", "quality of life", "host only", ]
