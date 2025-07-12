@@ -121,9 +121,9 @@ BepInEx DLLs:
 $($bepinexDlls | ForEach-Object { "  - $_" } | Out-String)
 
 Instructions:
-1. Copy all DLLs from this directory to your macOS project's 'libs/' folder
-2. Make sure your macOS project's .csproj file references these DLLs correctly
-3. Run 'dotnet build' on macOS to verify everything works
+1. Copy all DLLs from this directory to your project's 'libs/' folder
+2. Make sure your project's .csproj file references these DLLs correctly
+3. Run 'dotnet build' to verify everything works
 "@
 
 $summary | Out-File -FilePath $summaryPath -Encoding UTF8
@@ -131,6 +131,6 @@ Write-Host "Summary saved to: $summaryPath" -ForegroundColor Cyan
 
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Yellow
-Write-Host "1. Copy all files from '$OUTPUT_PATH' to your macOS project's 'libs/' directory" -ForegroundColor White
-Write-Host "2. On macOS, run 'dotnet restore' and 'dotnet build' to test" -ForegroundColor White
+Write-Host "1. Copy all files from '$OUTPUT_PATH' to your project's 'libs/' directory" -ForegroundColor White
+Write-Host "2. Run 'dotnet restore' and 'dotnet build' to test" -ForegroundColor White
 Write-Host "3. See DEVELOPMENT_SETUP.md for more details" -ForegroundColor White 

@@ -17,7 +17,7 @@
 
 ### 1. Install BepInEx
 
-1. Download BepInEx from: https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x64_5.4.23.3.zip
+1. Download the latest BepInEx from: https://github.com/BepInEx/BepInEx/releases
 2. Extract to your PEAK game directory: `C:\Program Files (x86)\Steam\steamapps\common\PEAK`
 3. Run the game once to initialize BepInEx
 
@@ -117,6 +117,14 @@ The mod uses Harmony to patch game methods:
 - **Mod not loading**: Check BepInEx console for errors
 - **Missing marshmallows**: Verify configuration settings
 - **UI issues**: Check if end screen patches are working
+- **End screen crashes**: May indicate game version incompatibility
+
+### Troubleshooting Steps
+
+1. **Clean build**: Run `dotnet clean` then `dotnet build`
+2. **Update DLLs**: Run `.\extract_dlls.ps1` to get latest game DLLs
+3. **Check BepInEx version**: Ensure you're using a compatible BepInEx version
+4. **Verify game path**: Make sure PEAK_PATH points to your actual game installation
 
 ## Contributing
 
