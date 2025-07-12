@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using BepInEx;
@@ -46,7 +47,7 @@ public partial class Plugin : BaseUnityPlugin
     {
         Logger = base.Logger;
         Logger.LogInfo($"Plugin {Id} is loaded!");
-        
+
         // Initialize reflection field for accessing private oldPip field
         oldPipField = typeof(EndScreen).GetField("oldPip", BindingFlags.NonPublic | BindingFlags.Instance);
         if (oldPipField == null)
@@ -62,7 +63,7 @@ public partial class Plugin : BaseUnityPlugin
             "The maximum number of players you want to be able to join your lobby (Including yourself). Warning: untested, higher numbers may be unstable! Range: 1-20"
         );
         _newMaxPlayers = _configMaxPlayers.Value;
-        
+
         _configExtraMarshmallows = Config.Bind
         (
             "General",
@@ -71,7 +72,7 @@ public partial class Plugin : BaseUnityPlugin
             "Controls whether additional marshmallows are spawned for the extra players"
         );
         _extraMarshmallows = _configExtraMarshmallows.Value;
-        
+
         _configExtraBackpacks = Config.Bind
         (
             "General",
@@ -79,7 +80,7 @@ public partial class Plugin : BaseUnityPlugin
             true,
             "Controls whether additional backpacks have a chance to be spawned for extra players"
         );
-        
+
         _configLateMarshmallows = Config.Bind
         (
             "General",
@@ -100,7 +101,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             _cheatExtraMarshmallows = 30;
         }
-        
+
         _configCheatExtraBackpacks = Config.Bind
         (
             "General",
@@ -114,7 +115,7 @@ public partial class Plugin : BaseUnityPlugin
         {
             _cheatExtraBackpacks = 10;
         }
-        
+
         if (_newMaxPlayers == 0)
         {
             _newMaxPlayers = 1;
@@ -127,7 +128,8 @@ public partial class Plugin : BaseUnityPlugin
         NetworkConnector.MAX_PLAYERS = _newMaxPlayers;
         Logger.LogInfo($"Plugin {Id} set the Max Players to " + NetworkConnector.MAX_PLAYERS + "!");
         Logger.LogInfo($"Plugin {Id} is patching!");
-        if (_extraMarshmallows) {
+        if (_extraMarshmallows)
+        {
             Logger.LogInfo($"Plugin {Id} extra marshmallows are enabled!");
             _harmony.PatchAll(typeof(AwakePatch));
             Logger.LogInfo($"Plugin {Id} late marshmallows are enabled!");
@@ -144,10 +146,10 @@ public partial class Plugin : BaseUnityPlugin
         Logger.LogInfo($"Plugin {Id} has patched!");
     }
 
-    private static List<Vector3> GetEvenlySpacedPointsAroundCampfire(int numPoints, float innerRadius, float outerRadius, Vector3 campfirePosition, Segment advanceToSegment)
+    public static List<Vector3> GetEvenlySpacedPointsAroundCampfire(int numPoints, float innerRadius, float outerRadius, Vector3 campfirePosition, Segment advanceToSegment)
     {
         List<Vector3> points = new List<Vector3>();
-    
+
         for (int i = 0; i < numPoints; i++)
         {
             float radius = outerRadius;
@@ -155,29 +157,29 @@ public partial class Plugin : BaseUnityPlugin
             {
                 radius = innerRadius;
             }
-            
+
             float angle = i * Mathf.PI * 2f / numPoints; // Even spacing: 2π / n
             float x = radius * Mathf.Cos(angle);
             float z = radius * Mathf.Sin(angle);
-            
+
             points.Add(SetToGround(new Vector3(x, 0f, z) + campfirePosition));
         }
-        
+
         return points;
     }
-    
+
     private static List<GameObject> spawnMarshmallows(int number, Vector3 campfirePosition, Segment advanceToSegment)
     {
         List<GameObject> marshmallows = new List<GameObject>();
         Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[46];
-        Logger.LogInfo((object) ("Plugin PeakUnlimited " + obj.GetName()));
+        Logger.LogInfo((object)("Plugin PeakUnlimited " + obj.GetName()));
         obj.GetName();
         foreach (Vector3 position in GetEvenlySpacedPointsAroundCampfire(number, 2.5f, 3f, campfirePosition,
                      advanceToSegment))
         {
             marshmallows.Add(Add(obj, position).gameObject);
         }
-        Logger.LogInfo((object) ("Plugin PeakUnlimited added with position: " + obj.GetName()));
+        Logger.LogInfo((object)("Plugin PeakUnlimited added with position: " + obj.GetName()));
         return marshmallows;
     }
 
@@ -185,15 +187,64 @@ public partial class Plugin : BaseUnityPlugin
     {
         return HelperFunctions.GetGroundPos(vector, HelperFunctions.LayerType.TerrainMap);
     }
-    
+
+    // Test helper methods
+    public static bool ValidatePlayerCount(int playerCount, int vanillaMaxPlayers)
+    {
+        return playerCount > 0 && playerCount <= 30;
+    }
+
+    public static bool ValidateMaxPlayers(int maxPlayers)
+    {
+        return maxPlayers > 0 && maxPlayers <= 30;
+    }
+
+    public static bool ValidateCheatMarshmallows(int count)
+    {
+        return count >= 0 && count <= 30;
+    }
+
+    public static bool ValidateCheatBackpacks(int count)
+    {
+        return count >= 0 && count <= 10;
+    }
+
+    public static T[] ExpandArrayForExtraPlayers<T>(T[] originalArray, int newCount)
+    {
+        var newArray = new T[newCount];
+        for (int i = 0; i < originalArray.Length && i < newCount; i++)
+        {
+            newArray[i] = originalArray[i];
+        }
+        return newArray;
+    }
+
+    public static int CalculateExtraMarshmallows(int currentPlayers, int vanillaMaxPlayers, int cheatMarshmallows)
+    {
+        if (cheatMarshmallows > 0)
+        {
+            return cheatMarshmallows - vanillaMaxPlayers;
+        }
+        return Math.Max(0, currentPlayers - vanillaMaxPlayers);
+    }
+
+    public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers)
+    {
+        int extraPlayers = currentPlayers - vanillaMaxPlayers;
+        if (extraPlayers <= 0) return 0;
+
+        double backpackChance = extraPlayers * 0.25;
+        return (int)backpackChance;
+    }
+
     private static Item Add(Item item, Vector3 position)
     {
         if (!PhotonNetwork.IsConnected)
             return null;
-        Logger.LogInfo((object) string.Format("Spawn item: {0} at {1}", (object) item, (object) position));
-        return PhotonNetwork.Instantiate("0_Items/" + item.name, position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f)).GetComponent<Item>();
+        Logger.LogInfo((object)string.Format("Spawn item: {0} at {1}", (object)item, (object)position));
+        return PhotonNetwork.Instantiate("0_Items/" + item.name, position, Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f)).GetComponent<Item>();
     }
-    
+
     public class AwakePatch
     {
         [HarmonyPatch(typeof(Campfire), "Awake")]
@@ -202,8 +253,8 @@ public partial class Plugin : BaseUnityPlugin
         {
             if (!PhotonNetwork.IsMasterClient)
                 return;
-            
-            
+
+
             //Backpack addition
             if (_configExtraBackpacks.Value)
             {
@@ -211,9 +262,10 @@ public partial class Plugin : BaseUnityPlugin
                 Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[6];
                 int numberOfExtraPlayers = _numberOfPlayers - vanillaMaxPlayers;
                 int number = 0;
-                if (numberOfExtraPlayers > 0) {
+                if (numberOfExtraPlayers > 0)
+                {
                     double backpackNumber = numberOfExtraPlayers * 0.25;
-                    
+
                     if (backpackNumber % 4 == 0)
                     {
                         number = (int)backpackNumber;
@@ -221,15 +273,15 @@ public partial class Plugin : BaseUnityPlugin
                     else
                     {
                         number = (int)backpackNumber;
-                        if (Random.Range(0f, 1f) <= backpackNumber - number)
+                        if (UnityEngine.Random.Range(0f, 1f) <= backpackNumber - number)
                         {
                             number++;
                         }
                     }
                 }
-                if (_cheatExtraBackpacks  > 0 && _cheatExtraBackpacks  <= 10)
+                if (_cheatExtraBackpacks > 0 && _cheatExtraBackpacks <= 10)
                 {
-                    number = _cheatExtraBackpacks  - 1; //Minus one as there is already a backpack present
+                    number = _cheatExtraBackpacks - 1; //Minus one as there is already a backpack present
                 }
 
                 if (number > 0)
@@ -253,7 +305,7 @@ public partial class Plugin : BaseUnityPlugin
                 }
             }
             //End of backpack addition
-            
+
             //Marshmallow addition
             if (__instance.gameObject.transform.parent.gameObject.name.ToLower().Contains("wings"))
             {
@@ -271,7 +323,7 @@ public partial class Plugin : BaseUnityPlugin
                     amountOfMarshmallowsToSpawn = _cheatExtraMarshmallows - _numberOfPlayers;
                 }
             }
-            
+
             Plugin.Logger.LogInfo("Start of campfire patch!");
             if (PhotonNetwork.IsMasterClient && (_numberOfPlayers > vanillaMaxPlayers || _cheatExtraMarshmallows != 0))
             {
@@ -309,7 +361,7 @@ public partial class Plugin : BaseUnityPlugin
             }
         }
     }
-    
+
     public class OnPlayerLeftRoomPatch
     {
         [HarmonyPatch(typeof(PlayerConnectionLog), "OnPlayerLeftRoom")]
@@ -329,12 +381,12 @@ public partial class Plugin : BaseUnityPlugin
                 Logger.LogInfo("Removing a marshmallow!");
                 foreach (Campfire campfire in campfireList)
                 {
-                    Logger.LogInfo("Removing a marshmallow! " +  marshmallows[campfire].Count);
-                    Logger.LogInfo("Removing a marshmallow! " +  marshmallows[campfire][0].gameObject.name);
+                    Logger.LogInfo("Removing a marshmallow! " + marshmallows[campfire].Count);
+                    Logger.LogInfo("Removing a marshmallow! " + marshmallows[campfire][0].gameObject.name);
                     Destroy(marshmallows[campfire][0]);
                     marshmallows[campfire].RemoveAt(0);
-                    Logger.LogInfo("Removing a marshmallow! " +  marshmallows[campfire].Count);
-                    Logger.LogInfo("Removing a marshmallow! " +  marshmallows[campfire][0].gameObject.name);
+                    Logger.LogInfo("Removing a marshmallow! " + marshmallows[campfire].Count);
+                    Logger.LogInfo("Removing a marshmallow! " + marshmallows[campfire][0].gameObject.name);
                 }
             }
         }
@@ -364,10 +416,10 @@ public partial class Plugin : BaseUnityPlugin
             __instance.scoutImages = newScoutImages;
         }
     }
-    
+
     public class EndScreenNextPatch
     {
-        [HarmonyPatch(typeof (EndScreen), "Next")]
+        [HarmonyPatch(typeof(EndScreen), "Next")]
         [HarmonyPostfix]
         private static void PostFix()
         {
@@ -413,7 +465,7 @@ public partial class Plugin : BaseUnityPlugin
                             __instance.scoutWindows[0].transform.parent
                         );
                     }
-                    
+
                     if ((UnityEngine.Object)__instance.scouts[0] == null)
                     {
                         newScouts[i] = null;
@@ -425,7 +477,7 @@ public partial class Plugin : BaseUnityPlugin
                             __instance.scouts[0].transform.parent
                         );
                     }
-                    
+
                     if ((UnityEngine.Object)__instance.scoutsAtPeak[0] == null)
                     {
                         newScoutsAtPeak[i] = null;
@@ -437,7 +489,7 @@ public partial class Plugin : BaseUnityPlugin
                             __instance.scoutsAtPeak[0].transform.parent
                         );
                     }
-                    
+
                     if (oldPipArray == null || oldPipArray.Length == 0 || (UnityEngine.Object)oldPipArray[0] == null)
                     {
                         newOldPip[i] = null;
@@ -449,7 +501,7 @@ public partial class Plugin : BaseUnityPlugin
                             oldPipArray[0].transform.parent
                         );
                     }
-                    
+
                     if ((UnityEngine.Object)__instance.scoutLines[0] == null)
                     {
                         newScoutLines[i] = null;
@@ -460,7 +512,8 @@ public partial class Plugin : BaseUnityPlugin
                             __instance.scoutLines[0],
                             __instance.scoutLines[0].transform.parent
                         );
-                    }}
+                    }
+                }
                 else
                 {
                     newScoutWindows[i] = __instance.scoutWindows[i];

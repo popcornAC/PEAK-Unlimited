@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PEAKUnlimited</name>
+    </assembly>
+    <members>
+        <member name="F:PEAKUnlimited.Plugin.Id">
+            <summary>
+            The Id of <see cref="T:PEAKUnlimited.Plugin"/>.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Plugin.Name">
+            <summary>
+            Gets the name of <see cref="T:PEAKUnlimited.Plugin"/>.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Plugin.Version">
+            <summary>
+            Gets the version of <see cref="T:PEAKUnlimited.Plugin"/>.
+            </summary>
+        </member>
+    </members>
+</doc>
