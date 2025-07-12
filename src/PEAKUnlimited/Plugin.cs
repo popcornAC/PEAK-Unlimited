@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -39,11 +40,19 @@ public partial class Plugin : BaseUnityPlugin
     private static bool isAfterAwake = false;
     private static int vanillaMaxPlayers = 4;
     private static Dictionary<Campfire, List<GameObject>> marshmallows = new Dictionary<Campfire, List<GameObject>>();
+    private static FieldInfo oldPipField;
 
     private void Awake()
     {
         Logger = base.Logger;
         Logger.LogInfo($"Plugin {Id} is loaded!");
+        
+        // Initialize reflection field for accessing private oldPip field
+        oldPipField = typeof(EndScreen).GetField("oldPip", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (oldPipField == null)
+        {
+            Logger.LogWarning("Could not find oldPip field in EndScreen class - end screen UI may not display correctly for extra players.");
+        }
 
         _configMaxPlayers = Config.Bind
         (
@@ -384,6 +393,9 @@ public partial class Plugin : BaseUnityPlugin
             var newOldPip = new Image[Character.AllCharacters.Count];
             var newScoutLines = new Transform[Character.AllCharacters.Count];
 
+            // Get the oldPip array once to avoid repeated reflection calls
+            var oldPipArray = oldPipField?.GetValue(__instance) as Image[];
+
             for (int i = 0; i < Character.AllCharacters.Count; i++)
             {
                 //Don't do anything to the original ones
@@ -426,15 +438,15 @@ public partial class Plugin : BaseUnityPlugin
                         );
                     }
                     
-                    if ((UnityEngine.Object)__instance.oldPip[0] == null)
+                    if (oldPipArray == null || oldPipArray.Length == 0 || (UnityEngine.Object)oldPipArray[0] == null)
                     {
                         newOldPip[i] = null;
                     }
                     else
                     {
                         newOldPip[i] = Instantiate(
-                            __instance.oldPip[0],
-                            __instance.oldPip[0].transform.parent
+                            oldPipArray[0],
+                            oldPipArray[0].transform.parent
                         );
                     }
                     
@@ -454,7 +466,7 @@ public partial class Plugin : BaseUnityPlugin
                     newScoutWindows[i] = __instance.scoutWindows[i];
                     newScouts[i] = __instance.scouts[i];
                     newScoutsAtPeak[i] = __instance.scoutsAtPeak[i];
-                    newOldPip[i] = __instance.oldPip[i];
+                    newOldPip[i] = oldPipArray != null && i < oldPipArray.Length ? oldPipArray[i] : null;
                     newScoutLines[i] = __instance.scoutLines[i];
                 }
             }
@@ -463,7 +475,7 @@ public partial class Plugin : BaseUnityPlugin
             __instance.scoutWindows = newScoutWindows;
             __instance.scouts = newScouts;
             __instance.scoutsAtPeak = newScoutsAtPeak;
-            __instance.oldPip = newOldPip;
+            oldPipField?.SetValue(__instance, newOldPip);
             __instance.scoutLines = newScoutLines;
         }
     }
