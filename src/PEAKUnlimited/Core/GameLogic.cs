@@ -8,6 +8,7 @@ namespace PEAKUnlimited.Core
     using System.Collections.Generic;
     using UnityEngine;
 
+
     public static class GameLogic
     {
         public static bool ValidatePlayerCount(int playerCount, int vanillaMaxPlayers)
@@ -53,14 +54,43 @@ namespace PEAKUnlimited.Core
 
         public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers)
         {
+            return CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true);
+        }
+
+        public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers, bool useRandom)
+        {
             int extraPlayers = currentPlayers - vanillaMaxPlayers;
             if (extraPlayers <= 0)
             {
                 return 0;
             }
 
-            double backpackChance = extraPlayers * 0.25;
-            return (int)backpackChance;
+            double backpackNumber = extraPlayers * 0.25;
+            
+            if (backpackNumber % 4 == 0)
+            {
+                return (int)backpackNumber;
+            }
+            else
+            {
+                int baseNumber = (int)backpackNumber;
+                if (useRandom)
+                {
+                    var random = new System.Random();
+                    if (random.NextDouble() <= backpackNumber - baseNumber)
+                    {
+                        return baseNumber + 1;
+                    }
+                }
+                else
+                {
+                    if ((backpackNumber - baseNumber) >= 0.5)
+                    {
+                        return baseNumber + 1;
+                    }
+                }
+                return baseNumber;
+            }
         }
 
         // Delegate for ground placement logic, to allow mocking in tests

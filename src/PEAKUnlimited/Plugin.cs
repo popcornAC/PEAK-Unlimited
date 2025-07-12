@@ -204,25 +204,7 @@ public partial class Plugin : BaseUnityPlugin
             {
                 Logger.LogInfo("Backpackification enabled and starting!");
                 Item obj = currentInstance.itemService.GetItem(6);
-                int numberOfExtraPlayers = currentInstance.gameStateManager.GetExtraPlayersCount();
-                int number = 0;
-                if (numberOfExtraPlayers > 0)
-                {
-                    double backpackNumber = numberOfExtraPlayers * 0.25;
-
-                    if (backpackNumber % 4 == 0)
-                    {
-                        number = (int)backpackNumber;
-                    }
-                    else
-                    {
-                        number = (int)backpackNumber;
-                        if (UnityEngine.Random.Range(0f, 1f) <= backpackNumber - number)
-                        {
-                            number++;
-                        }
-                    }
-                }
+                int number = GameLogic.CalculateExtraBackpacks(currentInstance.gameStateManager.NumberOfPlayers, currentInstance.gameStateManager.VanillaMaxPlayersValue);
 
                 if (currentInstance.pluginConfig.CheatExtraBackpacks > 0 && currentInstance.pluginConfig.CheatExtraBackpacks <= 10)
                 {
