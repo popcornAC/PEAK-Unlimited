@@ -50,12 +50,12 @@ Only the host needs to install!
 - [Voice Volume Saver](https://thunderstore.io/c/peak/p/glarmer/PEAK_Voice_Volume_Saver/) - Saves the volume of all your friends, no more adjusting their volume every time you load in!
 
 
-## Images
-- Here are some fun pictures using the mod
-
+## Media
 
 ![peakunlimited1](https://glarmer.xyz/images/1mNyvy8.png)
 
-![peakunlimited1](https://glarmer.xyz/images/9pnQpW8.png)
-
 ![peakunlimited1](https://glarmer.xyz/images/W5183qL.png)
+
+#### Yogscast Using PEAK Unlimited (Click for video!)
+[![Yogscast Playing PEAK with PEAK Unlimited](https://img.youtube.com/vi/AxY341m85WE/0.jpg)](https://www.youtube.com/watch?v=AxY341m85WE)
+
