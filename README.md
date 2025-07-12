@@ -37,7 +37,7 @@ Only the host needs to install!
 
 ## Important
 - DO NOT UNDER ANY CIRCUMSTANCE COMPLAIN ABOUT BUGS TO THE DEVELOPERS WHILE USING MODS. UNINSTALL MODS IF YOU ENCOUNTER BUGS AND THEN REPORT THEM IF THEY ARE STILL PRESENT.
-- Please search the PEAK Steam discussions if you face bugs as they are likely caused by the game and not the mod, currently there are no known issues caused by this mod. If you continue to experience issues then please reach out.
+- Please search the PEAK Steam discussions and Discord if you face bugs as they are possibly caused by the game and not the mod. If you continue to experience issues then please reach out via the Github issues!
 
 ## Help
 - You can find your PEAK folder by **right clicking the game in your Steam library** then > **Manage** > **Browse Local Files**
