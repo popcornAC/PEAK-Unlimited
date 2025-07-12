@@ -1,9 +1,9 @@
 {
     "name": "PEAK_Unlimited",
-    "version_number": "2.7.1",
+    "version_number": "1.2.0",
     "website_url": "https://github.com/glarmer/PEAK-Unlimited/",
-    "description": "Unlocks the max player cap for playing with more than 4 friends! (Now with extra marshmallows!)",
+    "description": "Unlocks the max player cap for playing with more than 4 friends! (Configurable up to 2000 players!)",
     "dependencies": [
-        "BepInEx-BepInExPack_PEAK-5.4.2403"
+        "BepInEx-BepInExPack-5.4.2100"
     ]
 }
