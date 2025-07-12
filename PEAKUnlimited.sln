@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{7EDA4B4A-4C99-4005-9686-60D6FD10B26D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PEAKUnlimited", "src\PEAKUnlimited\PEAKUnlimited.csproj", "{4C521601-1D13-41EE-9917-657F01A2C95D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C521601-1D13-41EE-9917-657F01A2C95D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C521601-1D13-41EE-9917-657F01A2C95D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C521601-1D13-41EE-9917-657F01A2C95D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C521601-1D13-41EE-9917-657F01A2C95D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4C521601-1D13-41EE-9917-657F01A2C95D} = {7EDA4B4A-4C99-4005-9686-60D6FD10B26D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {92F6D475-68F0-44D6-A1AF-A28F5948E381}
+	EndGlobalSection
+EndGlobal
