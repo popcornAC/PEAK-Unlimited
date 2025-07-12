@@ -1,0 +1,18 @@
+{
+  "dotnet.defaultSolution": "PEAKUnlimited.sln",
+  "omnisharp.enableEditorConfigSupport": true,
+  "omnisharp.enableImportCompletion": true,
+  "omnisharp.enableRoslynAnalyzers": true,
+  "csharp.format.enable": true,
+  "csharp.semanticHighlighting.enabled": true,
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "**/.vs": true
+  },
+  "search.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+    "**/.vs": true
+  }
+}

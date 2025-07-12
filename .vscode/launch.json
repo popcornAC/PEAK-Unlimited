@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Attach to PEAK",
+      "type": "coreclr",
+      "request": "attach",
+      "processName": "PEAK",
+      "program": "${workspaceFolder}/src/PEAKUnlimited/bin/Debug/netstandard2.1/PEAKUnlimited.dll"
+    },
+    {
+      "name": "Build and Deploy",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/PEAKUnlimited/bin/Release/netstandard2.1/PEAKUnlimited.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "stopAtEntry": false
+    }
+  ]
+}
