@@ -1,3 +1,7 @@
+// <copyright file="Plugin.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
 namespace PEAKUnlimited;
 
 using System;
@@ -7,6 +11,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using PEAKUnlimited.Core;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -137,24 +142,8 @@ public partial class Plugin : BaseUnityPlugin
 
     public static List<Vector3> GetEvenlySpacedPointsAroundCampfire(int numPoints, float innerRadius, float outerRadius, Vector3 campfirePosition, Segment advanceToSegment)
     {
-        List<Vector3> points = new List<Vector3>();
-
-        for (int i = 0; i < numPoints; i++)
-        {
-            float radius = outerRadius;
-            if (i % 2 == 0)
-            {
-                radius = innerRadius;
-            }
-
-            float angle = i * Mathf.PI * 2f / numPoints; // Even spacing: 2π / n
-            float x = radius * Mathf.Cos(angle);
-            float z = radius * Mathf.Sin(angle);
-
-            points.Add(SetToGround(new Vector3(x, 0f, z) + campfirePosition));
-        }
-
-        return points;
+        return GameLogic.GetEvenlySpacedPointsAroundCampfire(
+            numPoints, innerRadius, outerRadius, campfirePosition, SetToGround);
     }
 
     private static List<GameObject> SpawnMarshmallows(int number, Vector3 campfirePosition, Segment advanceToSegment)
@@ -176,60 +165,6 @@ public partial class Plugin : BaseUnityPlugin
     private static Vector3 SetToGround(Vector3 vector)
     {
         return HelperFunctions.GetGroundPos(vector, HelperFunctions.LayerType.TerrainMap);
-    }
-
-    // Test helper methods
-    public static bool ValidatePlayerCount(int playerCount, int vanillaMaxPlayers)
-    {
-        return playerCount > 0 && playerCount <= 30;
-    }
-
-    public static bool ValidateMaxPlayers(int maxPlayers)
-    {
-        return maxPlayers > 0 && maxPlayers <= 30;
-    }
-
-    public static bool ValidateCheatMarshmallows(int count)
-    {
-        return count >= 0 && count <= 30;
-    }
-
-    public static bool ValidateCheatBackpacks(int count)
-    {
-        return count >= 0 && count <= 10;
-    }
-
-    public static T[] ExpandArrayForExtraPlayers<T>(T[] originalArray, int newCount)
-    {
-        var newArray = new T[newCount];
-        for (int i = 0; i < originalArray.Length && i < newCount; i++)
-        {
-            newArray[i] = originalArray[i];
-        }
-
-        return newArray;
-    }
-
-    public static int CalculateExtraMarshmallows(int currentPlayers, int vanillaMaxPlayers, int cheatMarshmallows)
-    {
-        if (cheatMarshmallows > 0)
-        {
-            return cheatMarshmallows - vanillaMaxPlayers;
-        }
-
-        return Math.Max(0, currentPlayers - vanillaMaxPlayers);
-    }
-
-    public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers)
-    {
-        int extraPlayers = currentPlayers - vanillaMaxPlayers;
-        if (extraPlayers <= 0)
-        {
-            return 0;
-        }
-
-        double backpackChance = extraPlayers * 0.25;
-        return (int)backpackChance;
     }
 
     private static Item Add(Item item, Vector3 position)
