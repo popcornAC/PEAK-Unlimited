@@ -27,13 +27,24 @@ Introducing, "PEAK Unlimited", a mod for PEAK which raises the lobby max player 
 ## Manual Installation
 Only the host needs to install!
 
-1.) Download Bepinex from [here](https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x64_5.4.23.3.zip) <br>
-2.) Extract the contents of that zip into your game directory (default: C:\Program Files (x86)\Steam\steamapps\common\PEAK) resulting in a folder that has the following files: <br>
-![image](https://github.com/user-attachments/assets/403d9a1d-16a4-409c-a046-bc56141ac0ca) <br>
-3.) Start the game and close it again, this does the first time set up for Bepinex. <br>
-- Linux users: set the launch option `WINEDLLOVERRIDES="winhttp=n,b" %command%` before running the game.
-4.) Navigate to ...\PEAK\BepInEx\plugins, copy and paste the PeakUnlimited.dll from releases into this folder. <br>
-5.) Run the game <br>
+1. Download BepInEx from [here](https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x64_5.4.23.3.zip)
+
+2. Extract the contents of that zip into your game directory (default:  
+   `C:\Program Files (x86)\Steam\steamapps\common\PEAK`)  
+   The directory should now contain the following files:
+
+   ![image](https://github.com/user-attachments/assets/403d9a1d-16a4-409c-a046-bc56141ac0ca)
+
+3. Start the game once, then close it. This initializes BepInEx.
+
+   - **Linux users**: Set the launch option before running the game:  
+     ```
+     WINEDLLOVERRIDES="winhttp=n,b" %command%
+     ```
+
+4. Navigate to `...\PEAK\BepInEx\plugins` and copy `PeakUnlimited.dll` (from the [releases](https://github.com/glarmer/PEAK-Unlimited/releases)) into this folder.
+
+5. Run the game.
 
 ## Important
 - Do not complain to the game developers about bugs if you are using mods. Uninstall your mods first and if they persist then tell them!
