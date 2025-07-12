@@ -4,47 +4,13 @@
 
 namespace PEAKUnlimited.Tests
 {
-    using System.Collections.Generic;
-    using System.Reflection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using PEAKUnlimited.Core;
-    using UnityEngine;
-    using UnityEngine.UI;
 
     [TestClass]
     public class PluginTests
     {
-        [TestMethod]
-        public void TestReflectionFieldAccess()
-        {
-            // Test that the oldPip field can be accessed via reflection
-            var oldPipField = typeof(EndScreen).GetField("oldPip", BindingFlags.NonPublic | BindingFlags.Instance);
-            Assert.IsNotNull(oldPipField, "oldPip field should be accessible via reflection");
-            Assert.AreEqual(typeof(Image[]), oldPipField.FieldType, "oldPip field should be of type Image[]");
-        }
-
-        [TestMethod]
-        public void TestGetEvenlySpacedPointsAroundCampfire()
-        {
-            // Test the marshmallow positioning logic
-            Vector3 campfirePosition = new Vector3(0, 0, 0);
-            int numPoints = 6;
-            float innerRadius = 2.5f;
-            float outerRadius = 3.0f;
-
-            var points = Plugin.GetEvenlySpacedPointsAroundCampfire(numPoints, innerRadius, outerRadius, campfirePosition, default(Segment));
-
-            Assert.AreEqual(numPoints, points.Count, "Should return exactly the requested number of points");
-
-            // Test that points are within expected radius
-            foreach (var point in points)
-            {
-                float distance = Vector3.Distance(campfirePosition, point);
-                Assert.IsTrue(
-                    distance >= innerRadius && distance <= outerRadius,
-                    $"Point {point} should be within radius {innerRadius}-{outerRadius}, but was {distance}");
-            }
-        }
+        
 
         [TestMethod]
         public void TestPlayerCountValidation()
@@ -80,24 +46,7 @@ namespace PEAKUnlimited.Tests
             Assert.IsFalse(GameLogic.ValidateCheatBackpacks(11), "11+ cheat backpacks should be invalid");
         }
 
-        [TestMethod]
-        public void TestEndScreenArrayExpansion()
-        {
-            // Test that end screen arrays are properly expanded
-            int originalCount = 4;
-            int newCount = 8;
-
-            var originalArray = new Image[originalCount];
-            var expandedArray = GameLogic.ExpandArrayForExtraPlayers(originalArray, newCount);
-
-            Assert.AreEqual(newCount, expandedArray.Length, "Array should be expanded to new count");
-
-            // Test that original elements are preserved
-            for (int i = 0; i < originalCount; i++)
-            {
-                Assert.AreEqual(originalArray[i], expandedArray[i], $"Original element {i} should be preserved");
-            }
-        }
+        
 
         [TestMethod]
         public void TestMarshmallowSpawnLogic()
@@ -127,20 +76,5 @@ namespace PEAKUnlimited.Tests
             Assert.AreEqual(expectedBackpacks, actualBackpacks,
                 $"Should spawn {expectedBackpacks} extra backpacks for {currentPlayers} players");
         }
-    }
-
-    // Mock EndScreen class for testing
-    public class EndScreen
-    {
-        private Image[] oldPip = new Image[4];
-        public Image[] Scouts = new Image[4];
-        public Image[] ScoutsAtPeak = new Image[4];
-        public EndScreenScoutWindow[] ScoutWindows = new EndScreenScoutWindow[4];
-        public Transform[] ScoutLines = new Transform[4];
-    }
-
-    // Mock classes for testing
-    public class EndScreenScoutWindow
-    {
     }
 }

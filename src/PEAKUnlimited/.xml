@@ -4,6 +4,222 @@
         <name>PEAKUnlimited</name>
     </assembly>
     <members>
+        <member name="T:PEAKUnlimited.Core.ConfigurationManager">
+            <summary>
+            Manages plugin configuration and validation.
+            </summary>
+        </member>
+        <member name="T:PEAKUnlimited.Core.ConfigurationManager.PluginConfig">
+            <summary>
+            Configuration settings for the plugin.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.ConfigurationManager.ProcessConfiguration(PEAKUnlimited.Core.ConfigurationManager.PluginConfig)">
+            <summary>
+            Validates and processes configuration values.
+            </summary>
+            <param name="config">The raw configuration values.</param>
+            <returns>Processed and validated configuration.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.ConfigurationManager.ValidateAndClampMaxPlayers(System.Int32)">
+            <summary>
+            Validates and clamps the maximum players setting.
+            </summary>
+            <param name="maxPlayers">The raw max players value.</param>
+            <returns>The validated and clamped value.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.ConfigurationManager.ValidateAndClampCheatMarshmallows(System.Int32)">
+            <summary>
+            Validates and clamps the cheat marshmallows setting.
+            </summary>
+            <param name="cheatMarshmallows">The raw cheat marshmallows value.</param>
+            <returns>The validated and clamped value.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.ConfigurationManager.ValidateAndClampCheatBackpacks(System.Int32)">
+            <summary>
+            Validates and clamps the cheat backpacks setting.
+            </summary>
+            <param name="cheatBackpacks">The raw cheat backpacks value.</param>
+            <returns>The validated and clamped value.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.ConfigurationManager.CreateFromBepInExConfig(BepInEx.Configuration.ConfigEntry{System.Int32},BepInEx.Configuration.ConfigEntry{System.Boolean},BepInEx.Configuration.ConfigEntry{System.Boolean},BepInEx.Configuration.ConfigEntry{System.Boolean},BepInEx.Configuration.ConfigEntry{System.Int32},BepInEx.Configuration.ConfigEntry{System.Int32})">
+            <summary>
+            Creates a configuration from BepInEx config entries.
+            </summary>
+            <param name="configMaxPlayers">Max players config entry.</param>
+            <param name="configExtraMarshmallows">Extra marshmallows config entry.</param>
+            <param name="configExtraBackpacks">Extra backpacks config entry.</param>
+            <param name="configLateMarshmallows">Late marshmallows config entry.</param>
+            <param name="configCheatExtraMarshmallows">Cheat marshmallows config entry.</param>
+            <param name="configCheatExtraBackpacks">Cheat backpacks config entry.</param>
+            <returns>Processed configuration.</returns>
+        </member>
+        <member name="T:PEAKUnlimited.Core.GameStateManager">
+            <summary>
+            Manages game state including player counts and campfire tracking.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.GameStateManager.NumberOfPlayers">
+            <summary>
+            Gets the current number of players.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.GameStateManager.IsAfterAwake">
+            <summary>
+            Gets whether the game is after the initial awake phase.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.GameStateManager.VanillaMaxPlayersValue">
+            <summary>
+            Gets the vanilla maximum players.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.GameStateManager.CampfireList">
+            <summary>
+            Gets the list of campfires.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.GameStateManager.Marshmallows">
+            <summary>
+            Gets the marshmallows dictionary.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.PlayerJoined">
+            <summary>
+            Increments the player count.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.PlayerLeft">
+            <summary>
+            Decrements the player count.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.SetAfterAwake">
+            <summary>
+            Sets the after awake flag.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.AddCampfire(Campfire)">
+            <summary>
+            Adds a campfire to the tracking list.
+            </summary>
+            <param name="campfire">The campfire to add.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.AddMarshmallowsToCampfire(Campfire,System.Collections.Generic.List{UnityEngine.GameObject})">
+            <summary>
+            Adds marshmallows to a campfire.
+            </summary>
+            <param name="campfire">The campfire.</param>
+            <param name="marshmallowObjects">The marshmallow game objects.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.RemoveMarshmallowFromCampfire(Campfire,UnityEngine.GameObject)">
+            <summary>
+            Removes a marshmallow from a campfire.
+            </summary>
+            <param name="campfire">The campfire.</param>
+            <param name="marshmallow">The marshmallow to remove.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.GetExtraPlayersCount">
+            <summary>
+            Gets the number of extra players beyond vanilla maximum.
+            </summary>
+            <returns>The number of extra players.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.HasExtraPlayers">
+            <summary>
+            Checks if there are extra players beyond vanilla maximum.
+            </summary>
+            <returns>True if there are extra players.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.Reset">
+            <summary>
+            Resets the game state for a new game.
+            </summary>
+        </member>
+        <member name="T:PEAKUnlimited.Core.Interfaces.IItemService">
+            <summary>
+            Interface for item-related operations.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IItemService.GetItem(System.Int32)">
+            <summary>
+            Gets an item by its ID.
+            </summary>
+            <param name="itemId">The item ID.</param>
+            <returns>The item.</returns>
+        </member>
+        <member name="T:PEAKUnlimited.Core.Interfaces.INetworkService">
+            <summary>
+            Interface for network-related operations.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.Interfaces.INetworkService.IsConnected">
+            <summary>
+            Gets whether the network is connected.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.Interfaces.INetworkService.IsMasterClient">
+            <summary>
+            Gets whether this client is the master client.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.INetworkService.Instantiate(System.String,UnityEngine.Vector3,UnityEngine.Quaternion)">
+            <summary>
+            Instantiates a networked object.
+            </summary>
+            <param name="prefabName">The prefab name.</param>
+            <param name="position">The position.</param>
+            <param name="rotation">The rotation.</param>
+            <returns>The instantiated game object.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.INetworkService.Destroy(UnityEngine.GameObject)">
+            <summary>
+            Destroys a networked object.
+            </summary>
+            <param name="gameObject">The game object to destroy.</param>
+        </member>
+        <member name="T:PEAKUnlimited.Core.Services.PhotonNetworkService">
+            <summary>
+            Photon network service implementation.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.Services.PhotonNetworkService.IsConnected">
+            <summary>
+            Gets whether the network is connected.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.Services.PhotonNetworkService.IsMasterClient">
+            <summary>
+            Gets whether this client is the master client.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.PhotonNetworkService.Instantiate(System.String,UnityEngine.Vector3,UnityEngine.Quaternion)">
+            <summary>
+            Instantiates a networked object.
+            </summary>
+            <param name="prefabName">The prefab name.</param>
+            <param name="position">The position.</param>
+            <param name="rotation">The rotation.</param>
+            <returns>The instantiated game object.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.PhotonNetworkService.Destroy(UnityEngine.GameObject)">
+            <summary>
+            Destroys a networked object.
+            </summary>
+            <param name="gameObject">The game object to destroy.</param>
+        </member>
+        <member name="T:PEAKUnlimited.Core.Services.UnityItemService">
+            <summary>
+            Unity item service implementation.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityItemService.GetItem(System.Int32)">
+            <summary>
+            Gets an item by its ID.
+            </summary>
+            <param name="itemId">The item ID.</param>
+            <returns>The item.</returns>
+        </member>
         <member name="F:PEAKUnlimited.Plugin.Id">
             <summary>
             The Id of <see cref="T:PEAKUnlimited.Plugin"/>.
