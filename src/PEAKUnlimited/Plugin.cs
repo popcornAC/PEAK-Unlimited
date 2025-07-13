@@ -160,7 +160,10 @@ public partial class Plugin : BaseUnityPlugin
             this.gameStateManager.UpdateConfiguration(this.pluginConfig);
         }
 
-        // Sync UI config to config file
+        // Reapply Harmony patches if needed
+        this.ReapplyHarmonyPatches();
+
+        // Sync plugin config to config file
         this.configMaxPlayers.Value = this.pluginConfig.MaxPlayers;
         this.configExtraMarshmallows.Value = this.pluginConfig.ExtraMarshmallows;
         this.configExtraBackpacks.Value = this.pluginConfig.ExtraBackpacks;
@@ -168,6 +171,70 @@ public partial class Plugin : BaseUnityPlugin
         this.configCheatExtraMarshmallows.Value = this.pluginConfig.CheatExtraMarshmallows;
         this.configCheatExtraBackpacks.Value = this.pluginConfig.CheatExtraBackpacks;
         this.Config.Save();
+    }
+
+    /// <summary>
+    /// Reapplies Harmony patches based on current configuration.
+    /// </summary>
+    private void ReapplyHarmonyPatches()
+    {
+        if (this.harmony == null)
+        {
+            return;
+        }
+
+        // Unpatch all patches first
+        this.harmony.UnpatchSelf();
+
+        // Reapply patches based on current configuration
+        if (this.pluginConfig.ExtraMarshmallows)
+        {
+            this.harmony.PatchAll(typeof(AwakePatch));
+            this.harmony.PatchAll(typeof(OnPlayerLeftRoomPatch));
+            this.harmony.PatchAll(typeof(OnPlayerEnteredRoomPatch));
+        }
+
+        // Always apply end screen patches
+        this.harmony.PatchAll(typeof(EndSequenceRoutinePatch));
+        this.harmony.PatchAll(typeof(WaitingForPlayersUIPatch));
+        this.harmony.PatchAll(typeof(EndScreenStartPatch));
+        this.harmony.PatchAll(typeof(EndScreenNextPatch));
+    }
+
+    /// <summary>
+    /// Gets the raw configuration values from the config file.
+    /// </summary>
+    /// <returns>The raw configuration values.</returns>
+    public ConfigurationManager.PluginConfig GetRawConfigValues()
+    {
+        return new ConfigurationManager.PluginConfig
+        {
+            MaxPlayers = this.configMaxPlayers.Value,
+            ExtraMarshmallows = this.configExtraMarshmallows.Value,
+            ExtraBackpacks = this.configExtraBackpacks.Value,
+            LateJoinMarshmallows = this.configLateMarshmallows.Value,
+            CheatExtraMarshmallows = this.configCheatExtraMarshmallows.Value,
+            CheatExtraBackpacks = this.configCheatExtraBackpacks.Value,
+        };
+    }
+
+    /// <summary>
+    /// Updates the plugin configuration with new values.
+    /// </summary>
+    /// <param name="newConfig">The new configuration values.</param>
+    public void UpdatePluginConfiguration(ConfigurationManager.PluginConfig newConfig)
+    {
+        if (newConfig == null)
+        {
+            return;
+        }
+
+        this.pluginConfig.MaxPlayers = newConfig.MaxPlayers;
+        this.pluginConfig.ExtraMarshmallows = newConfig.ExtraMarshmallows;
+        this.pluginConfig.ExtraBackpacks = newConfig.ExtraBackpacks;
+        this.pluginConfig.LateJoinMarshmallows = newConfig.LateJoinMarshmallows;
+        this.pluginConfig.CheatExtraMarshmallows = newConfig.CheatExtraMarshmallows;
+        this.pluginConfig.CheatExtraBackpacks = newConfig.CheatExtraBackpacks;
     }
 
     private void SetupHarmonyPatches()

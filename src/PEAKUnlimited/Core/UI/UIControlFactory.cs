@@ -22,8 +22,8 @@ namespace PEAKUnlimited.Core.UI
             toggleObject.transform.SetParent(parent.transform, false);
 
             RectTransform toggleRect = toggleObject.AddComponent<RectTransform>();
-            toggleRect.anchorMin = new Vector2(0, 1 - ((index + 1) * 0.16f));
-            toggleRect.anchorMax = new Vector2(1, 1 - (index * 0.16f));
+            toggleRect.anchorMin = new Vector2(0, 1 - ((index + 1) * 0.12f));
+            toggleRect.anchorMax = new Vector2(1, 1 - (index * 0.12f));
             toggleRect.offsetMin = new Vector2(10, 5);
             toggleRect.offsetMax = new Vector2(-10, -5);
 
@@ -111,8 +111,8 @@ namespace PEAKUnlimited.Core.UI
             sliderObject.transform.SetParent(parent.transform, false);
 
             RectTransform sliderRect = sliderObject.AddComponent<RectTransform>();
-            sliderRect.anchorMin = new Vector2(0, 1 - ((index + 1) * 0.16f));
-            sliderRect.anchorMax = new Vector2(1, 1 - (index * 0.16f));
+            sliderRect.anchorMin = new Vector2(0, 1 - ((index + 1) * 0.12f));
+            sliderRect.anchorMax = new Vector2(1, 1 - (index * 0.12f));
             sliderRect.offsetMin = new Vector2(10, 5);
             sliderRect.offsetMax = new Vector2(-10, -5);
 
@@ -221,8 +221,8 @@ namespace PEAKUnlimited.Core.UI
             sliderObject.transform.SetParent(parent.transform, false);
 
             RectTransform sliderRect = sliderObject.AddComponent<RectTransform>();
-            sliderRect.anchorMin = new Vector2(0, 1 - ((index + 1) * 0.16f));
-            sliderRect.anchorMax = new Vector2(1, 1 - (index * 0.16f));
+            sliderRect.anchorMin = new Vector2(0, 1 - ((index + 1) * 0.12f));
+            sliderRect.anchorMax = new Vector2(1, 1 - (index * 0.12f));
             sliderRect.offsetMin = new Vector2(10, 5);
             sliderRect.offsetMax = new Vector2(-10, -5);
 

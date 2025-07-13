@@ -529,9 +529,14 @@
             Saves the current configuration.
             </summary>
         </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.SyncToMainConfig">
+            <summary>
+            Syncs the UI configuration back to the main plugin configuration.
+            </summary>
+        </member>
         <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.ResetConfiguration">
             <summary>
-            Resets the configuration to original values.
+            Resets the configuration to default values.
             </summary>
         </member>
         <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.CanModifyConfig">
@@ -620,6 +625,23 @@
             <summary>
             Applies configuration changes from the UI.
             </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Plugin.ReapplyHarmonyPatches">
+            <summary>
+            Reapplies Harmony patches based on current configuration.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Plugin.GetRawConfigValues">
+            <summary>
+            Gets the raw configuration values from the config file.
+            </summary>
+            <returns>The raw configuration values.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Plugin.UpdatePluginConfiguration(PEAKUnlimited.Core.ConfigurationManager.PluginConfig)">
+            <summary>
+            Updates the plugin configuration with new values.
+            </summary>
+            <param name="newConfig">The new configuration values.</param>
         </member>
         <member name="F:PEAKUnlimited.Plugin.Id">
             <summary>

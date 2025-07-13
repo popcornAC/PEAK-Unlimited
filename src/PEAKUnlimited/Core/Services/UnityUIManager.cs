@@ -57,15 +57,9 @@ namespace PEAKUnlimited.Core.Services
         public void SetConfiguration(ConfigurationManager.PluginConfig config, System.Action onSaved = null)
         {
             this.currentConfig = config;
-            this.originalConfig = new ConfigurationManager.PluginConfig
-            {
-                MaxPlayers = config.MaxPlayers,
-                ExtraMarshmallows = config.ExtraMarshmallows,
-                ExtraBackpacks = config.ExtraBackpacks,
-                LateJoinMarshmallows = config.LateJoinMarshmallows,
-                CheatExtraMarshmallows = config.CheatExtraMarshmallows,
-                CheatExtraBackpacks = config.CheatExtraBackpacks,
-            };
+            
+            // Store default values for reset functionality
+            this.originalConfig = ConfigurationManager.Default;
 
             this.onConfigurationSaved = onSaved;
             this.UpdateUIWithCurrentConfig();
@@ -310,7 +304,13 @@ namespace PEAKUnlimited.Core.Services
                 return;
             }
 
-            // Create a scrollable content area for controls
+            // Calculate total height needed for all controls
+            const float controlHeight = 0.12f; // Each control takes 12% of available height (reduced from 16%)
+            const int totalControls = 6; // Number of controls we have
+            float totalHeightNeeded = controlHeight * totalControls;
+            float availableHeight = 0.75f; // Available space from 0.1f to 0.85f
+
+            // Create a content area for controls
             GameObject scrollContent = new GameObject("ScrollContent");
             scrollContent.transform.SetParent(panelObject.transform, false);
 
@@ -320,13 +320,17 @@ namespace PEAKUnlimited.Core.Services
             scrollContentRect.offsetMin = new Vector2(10, 10);
             scrollContentRect.offsetMax = new Vector2(-10, -10);
 
-            // Add ScrollRect for scrolling
-            ScrollRect scrollRect = panelObject.AddComponent<ScrollRect>();
-            scrollRect.content = scrollContentRect;
-            scrollRect.horizontal = false;
-            scrollRect.vertical = true;
+            // Only add ScrollRect if content exceeds available space
+            if (totalHeightNeeded > availableHeight)
+            {
+                // Add ScrollRect for scrolling
+                ScrollRect scrollRect = panelObject.AddComponent<ScrollRect>();
+                scrollRect.content = scrollContentRect;
+                scrollRect.horizontal = false;
+                scrollRect.vertical = true;
+            }
 
-            // Create controls using the factory
+            // Create controls using the factory with adjusted height
             this.extraMarshmallowsToggle = UIControlFactory.CreateToggleControl(scrollContent, "Extra Marshmallows", 0,
                 "Spawns additional marshmallows for extra players", () =>
                 {
@@ -524,16 +528,8 @@ namespace PEAKUnlimited.Core.Services
             // Validate the configuration
             this.currentConfig = ConfigurationManager.ProcessConfiguration(this.currentConfig);
 
-            // Update the original config to match current
-            this.originalConfig = new ConfigurationManager.PluginConfig
-            {
-                MaxPlayers = this.currentConfig.MaxPlayers,
-                ExtraMarshmallows = this.currentConfig.ExtraMarshmallows,
-                ExtraBackpacks = this.currentConfig.ExtraBackpacks,
-                LateJoinMarshmallows = this.currentConfig.LateJoinMarshmallows,
-                CheatExtraMarshmallows = this.currentConfig.CheatExtraMarshmallows,
-                CheatExtraBackpacks = this.currentConfig.CheatExtraBackpacks,
-            };
+            // Sync UI config to main plugin config
+            this.SyncToMainConfig();
 
             // Call the save callback if provided
             this.onConfigurationSaved?.Invoke();
@@ -542,7 +538,25 @@ namespace PEAKUnlimited.Core.Services
         }
 
         /// <summary>
-        /// Resets the configuration to original values.
+        /// Syncs the UI configuration back to the main plugin configuration.
+        /// </summary>
+        private void SyncToMainConfig()
+        {
+            if (this.currentConfig == null)
+            {
+                return;
+            }
+
+            // Get the main plugin instance and update its config
+            var plugin = Plugin.currentInstance;
+            if (plugin != null)
+            {
+                plugin.UpdatePluginConfiguration(this.currentConfig);
+            }
+        }
+
+        /// <summary>
+        /// Resets the configuration to default values.
         /// </summary>
         private void ResetConfiguration()
         {
@@ -551,7 +565,7 @@ namespace PEAKUnlimited.Core.Services
                 return;
             }
 
-            // Reset to original values
+            // Restore default configuration values
             this.currentConfig.MaxPlayers = this.originalConfig.MaxPlayers;
             this.currentConfig.ExtraMarshmallows = this.originalConfig.ExtraMarshmallows;
             this.currentConfig.ExtraBackpacks = this.originalConfig.ExtraBackpacks;
