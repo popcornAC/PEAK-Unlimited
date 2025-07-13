@@ -1,8 +1,12 @@
-using System;
-using BepInEx.Configuration;
+// <copyright file="ConfigurationManager.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace PEAKUnlimited.Core
 {
+    using System;
+    using BepInEx.Configuration;
+
     /// <summary>
     /// Manages plugin configuration and validation.
     /// </summary>
@@ -13,13 +17,46 @@ namespace PEAKUnlimited.Core
         /// </summary>
         public class PluginConfig
         {
+            /// <summary>
+            /// Gets or sets the maximum number of players.
+            /// </summary>
             public int MaxPlayers { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether gets or sets whether to add extra marshmallows.
+            /// </summary>
             public bool ExtraMarshmallows { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether gets or sets whether to add extra backpacks.
+            /// </summary>
             public bool ExtraBackpacks { get; set; }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether gets or sets whether to add marshmallows for late-joining players.
+            /// </summary>
             public bool LateJoinMarshmallows { get; set; }
+
+            /// <summary>
+            /// Gets or sets the number of cheat extra marshmallows.
+            /// </summary>
             public int CheatExtraMarshmallows { get; set; }
+
+            /// <summary>
+            /// Gets or sets the number of cheat extra backpacks.
+            /// </summary>
             public int CheatExtraBackpacks { get; set; }
         }
+
+        public static PluginConfig Default => new PluginConfig
+        {
+            MaxPlayers = 20,
+            ExtraMarshmallows = true,
+            ExtraBackpacks = true,
+            LateJoinMarshmallows = false,
+            CheatExtraMarshmallows = 0,
+            CheatExtraBackpacks = 0
+        };
 
         /// <summary>
         /// Validates and processes configuration values.
@@ -35,7 +72,7 @@ namespace PEAKUnlimited.Core
                 ExtraBackpacks = config.ExtraBackpacks,
                 LateJoinMarshmallows = config.LateJoinMarshmallows,
                 CheatExtraMarshmallows = ValidateAndClampCheatMarshmallows(config.CheatExtraMarshmallows),
-                CheatExtraBackpacks = ValidateAndClampCheatBackpacks(config.CheatExtraBackpacks)
+                CheatExtraBackpacks = ValidateAndClampCheatBackpacks(config.CheatExtraBackpacks),
             };
 
             return processed;
@@ -52,12 +89,12 @@ namespace PEAKUnlimited.Core
             {
                 return 1;
             }
-            
+
             if (maxPlayers > 30)
             {
                 return 30;
             }
-            
+
             return maxPlayers;
         }
 
@@ -72,12 +109,12 @@ namespace PEAKUnlimited.Core
             {
                 return 0;
             }
-            
+
             if (cheatMarshmallows > 30)
             {
                 return 30;
             }
-            
+
             return cheatMarshmallows;
         }
 
@@ -92,12 +129,12 @@ namespace PEAKUnlimited.Core
             {
                 return 0;
             }
-            
+
             if (cheatBackpacks > 10)
             {
                 return 10;
             }
-            
+
             return cheatBackpacks;
         }
 
@@ -126,10 +163,10 @@ namespace PEAKUnlimited.Core
                 ExtraBackpacks = configExtraBackpacks.Value,
                 LateJoinMarshmallows = configLateMarshmallows.Value,
                 CheatExtraMarshmallows = configCheatExtraMarshmallows.Value,
-                CheatExtraBackpacks = configCheatExtraBackpacks.Value
+                CheatExtraBackpacks = configCheatExtraBackpacks.Value,
             };
 
             return ProcessConfiguration(rawConfig);
         }
     }
-} 
+}

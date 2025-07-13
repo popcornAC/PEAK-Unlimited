@@ -7,6 +7,7 @@
         <Version>2.7.1</Version>
         <LangVersion>10.0</LangVersion>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +29,26 @@
         </Reference>
         <Reference Include="UnityEngine.UI">
             <HintPath>../../libs/UnityEngine.UI.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule">
+            <HintPath>../../libs/UnityEngine.UIModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+            <HintPath>../../libs/UnityEngine.TextRenderingModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+            <HintPath>../../libs/UnityEngine.InputLegacyModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.PhysicsModule">
+            <HintPath>../../libs/UnityEngine.PhysicsModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputModule">
+            <HintPath>../../libs/UnityEngine.InputModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Photon.Pun">
@@ -61,6 +82,7 @@
     </PropertyGroup>
     
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Delete Files="$(PEAK_PATH)\BepInEx\plugins\PEAKUnlimited.dll" Condition="Exists('$(PEAK_PATH)\BepInEx\plugins\PEAKUnlimited.dll')" />
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PEAK_PATH)\BepInEx\plugins" Condition="Exists('$(PEAK_PATH)\BepInEx\plugins')" />
     </Target>
 

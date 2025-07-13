@@ -1,19 +1,23 @@
-using UnityEngine;
+// <copyright file="INetworkService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace PEAKUnlimited.Core.Interfaces
 {
+    using UnityEngine;
+
     /// <summary>
     /// Interface for network-related operations.
     /// </summary>
     public interface INetworkService
     {
         /// <summary>
-        /// Gets whether the network is connected.
+        /// Gets a value indicating whether the network is connected.
         /// </summary>
         bool IsConnected { get; }
 
         /// <summary>
-        /// Gets whether this client is the master client.
+        /// Gets a value indicating whether this client is the master client.
         /// </summary>
         bool IsMasterClient { get; }
 
@@ -32,4 +36,4 @@ namespace PEAKUnlimited.Core.Interfaces
         /// <param name="gameObject">The game object to destroy.</param>
         void Destroy(GameObject gameObject);
     }
-} 
+}

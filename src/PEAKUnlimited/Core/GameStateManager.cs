@@ -1,8 +1,12 @@
-using System.Collections.Generic;
-using UnityEngine;
+// <copyright file="GameStateManager.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace PEAKUnlimited.Core
 {
+    using System.Collections.Generic;
+    using UnityEngine;
+
     /// <summary>
     /// Manages game state including player counts and campfire tracking.
     /// </summary>
@@ -13,16 +17,18 @@ namespace PEAKUnlimited.Core
         private int numberOfPlayers = 1;
         private bool isAfterAwake = false;
         private const int VanillaMaxPlayers = 4;
+        private bool isClimbing = false;
+        private int lastMaxPlayers = VanillaMaxPlayers;
 
         /// <summary>
         /// Gets the current number of players.
         /// </summary>
-        public int NumberOfPlayers => numberOfPlayers;
+        public int NumberOfPlayers => this.numberOfPlayers;
 
         /// <summary>
-        /// Gets whether the game is after the initial awake phase.
+        /// Gets a value indicating whether gets whether the game is after the initial awake phase.
         /// </summary>
-        public bool IsAfterAwake => isAfterAwake;
+        public bool IsAfterAwake => this.isAfterAwake;
 
         /// <summary>
         /// Gets the vanilla maximum players.
@@ -32,19 +38,19 @@ namespace PEAKUnlimited.Core
         /// <summary>
         /// Gets the list of campfires.
         /// </summary>
-        public IReadOnlyList<Campfire> CampfireList => campfireList;
+        public IReadOnlyList<Campfire> CampfireList => this.campfireList;
 
         /// <summary>
         /// Gets the marshmallows dictionary.
         /// </summary>
-        public IReadOnlyDictionary<Campfire, List<GameObject>> Marshmallows => marshmallows;
+        public IReadOnlyDictionary<Campfire, List<GameObject>> Marshmallows => this.marshmallows;
 
         /// <summary>
         /// Increments the player count.
         /// </summary>
         public void PlayerJoined()
         {
-            numberOfPlayers++;
+            this.numberOfPlayers++;
         }
 
         /// <summary>
@@ -52,10 +58,10 @@ namespace PEAKUnlimited.Core
         /// </summary>
         public void PlayerLeft()
         {
-            numberOfPlayers--;
-            if (numberOfPlayers < 0)
+            this.numberOfPlayers--;
+            if (this.numberOfPlayers < 0)
             {
-                numberOfPlayers = 0;
+                this.numberOfPlayers = 0;
             }
         }
 
@@ -64,7 +70,7 @@ namespace PEAKUnlimited.Core
         /// </summary>
         public void SetAfterAwake()
         {
-            isAfterAwake = true;
+            this.isAfterAwake = true;
         }
 
         /// <summary>
@@ -73,9 +79,9 @@ namespace PEAKUnlimited.Core
         /// <param name="campfire">The campfire to add.</param>
         public void AddCampfire(Campfire campfire)
         {
-            if (!campfireList.Contains(campfire))
+            if (!this.campfireList.Contains(campfire))
             {
-                campfireList.Add(campfire);
+                this.campfireList.Add(campfire);
             }
         }
 
@@ -86,12 +92,12 @@ namespace PEAKUnlimited.Core
         /// <param name="marshmallowObjects">The marshmallow game objects.</param>
         public void AddMarshmallowsToCampfire(Campfire campfire, List<GameObject> marshmallowObjects)
         {
-            if (!marshmallows.ContainsKey(campfire))
+            if (!this.marshmallows.ContainsKey(campfire))
             {
-                marshmallows[campfire] = new List<GameObject>();
+                this.marshmallows[campfire] = new List<GameObject>();
             }
-            
-            marshmallows[campfire].AddRange(marshmallowObjects);
+
+            this.marshmallows[campfire].AddRange(marshmallowObjects);
         }
 
         /// <summary>
@@ -101,9 +107,9 @@ namespace PEAKUnlimited.Core
         /// <param name="marshmallow">The marshmallow to remove.</param>
         public void RemoveMarshmallowFromCampfire(Campfire campfire, GameObject marshmallow)
         {
-            if (marshmallows.ContainsKey(campfire))
+            if (this.marshmallows.ContainsKey(campfire))
             {
-                marshmallows[campfire].Remove(marshmallow);
+                this.marshmallows[campfire].Remove(marshmallow);
             }
         }
 
@@ -113,7 +119,7 @@ namespace PEAKUnlimited.Core
         /// <returns>The number of extra players.</returns>
         public int GetExtraPlayersCount()
         {
-            return GameLogic.CalculateExtraMarshmallows(numberOfPlayers, VanillaMaxPlayers, 0);
+            return GameLogic.CalculateExtraMarshmallows(this.numberOfPlayers, VanillaMaxPlayers, 0);
         }
 
         /// <summary>
@@ -122,7 +128,7 @@ namespace PEAKUnlimited.Core
         /// <returns>True if there are extra players.</returns>
         public bool HasExtraPlayers()
         {
-            return numberOfPlayers > VanillaMaxPlayers;
+            return this.numberOfPlayers > VanillaMaxPlayers;
         }
 
         /// <summary>
@@ -130,10 +136,79 @@ namespace PEAKUnlimited.Core
         /// </summary>
         public void Reset()
         {
-            numberOfPlayers = 1;
-            isAfterAwake = false;
-            campfireList.Clear();
-            marshmallows.Clear();
+            this.numberOfPlayers = 1;
+            this.isAfterAwake = false;
+            this.campfireList.Clear();
+            this.marshmallows.Clear();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the player is currently climbing.
+        /// </summary>
+        public bool IsCurrentlyClimbing
+        {
+            get
+            {
+                var mainMenu = UnityEngine.Object.FindFirstObjectByType<MainMenu>();
+                return mainMenu == null || !mainMenu.gameObject.activeInHierarchy;
+            }
+        }
+
+        /// <summary>
+        /// Updates the configuration.
+        /// </summary>
+        /// <param name="config">The new configuration.</param>
+        public void UpdateConfiguration(ConfigurationManager.PluginConfig config)
+        {
+            // If max players changed, reset player count to 1 (or keep as is)
+            if (config.MaxPlayers != lastMaxPlayers)
+            {
+                this.numberOfPlayers = 1;
+                lastMaxPlayers = config.MaxPlayers;
+            }
+            // You can add more config-based state updates here as needed
+        }
+
+        /// <summary>
+        /// Adds a player to the count.
+        /// </summary>
+        public void AddPlayer()
+        {
+            this.PlayerJoined();
+        }
+
+        /// <summary>
+        /// Removes a player from the count.
+        /// </summary>
+        public void RemovePlayer()
+        {
+            this.PlayerLeft();
+        }
+
+        /// <summary>
+        /// Deactivates an end screen.
+        /// </summary>
+        /// <param name="endScreen">The end screen to deactivate.</param>
+        public void DeactivateEndScreen(EndScreen endScreen)
+        {
+            // Deactivate the end screen UI
+            if (endScreen != null)
+            {
+                endScreen.gameObject.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// Deletes an end screen.
+        /// </summary>
+        /// <param name="endScreen">The end screen to delete.</param>
+        public void DeleteEndScreen(EndScreen endScreen)
+        {
+            // Destroy the end screen UI
+            if (endScreen != null)
+            {
+                UnityEngine.Object.Destroy(endScreen.gameObject);
+            }
         }
     }
-} 
+}

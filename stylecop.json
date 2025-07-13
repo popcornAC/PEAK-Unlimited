@@ -1,6 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
   "settings": {
+    "rules": {
+      "documentationRules": {
+        "fileHeaderTemplate": "",
+        "xmlHeader": false
+      }
+    },
     "documentationRules": {
       "companyName": "PEAK Unlimited",
       "variables": {

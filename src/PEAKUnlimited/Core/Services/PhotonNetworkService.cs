@@ -1,21 +1,25 @@
-using PEAKUnlimited.Core.Interfaces;
-using Photon.Pun;
-using UnityEngine;
+// <copyright file="PhotonNetworkService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace PEAKUnlimited.Core.Services
 {
+    using PEAKUnlimited.Core.Interfaces;
+    using Photon.Pun;
+    using UnityEngine;
+
     /// <summary>
     /// Photon network service implementation.
     /// </summary>
     public class PhotonNetworkService : INetworkService
     {
         /// <summary>
-        /// Gets whether the network is connected.
+        /// Gets a value indicating whether gets whether the network is connected.
         /// </summary>
         public bool IsConnected => PhotonNetwork.IsConnected;
 
         /// <summary>
-        /// Gets whether this client is the master client.
+        /// Gets a value indicating whether gets whether this client is the master client.
         /// </summary>
         public bool IsMasterClient => PhotonNetwork.IsMasterClient;
 
@@ -43,4 +47,4 @@ namespace PEAKUnlimited.Core.Services
             }
         }
     }
-} 
+}

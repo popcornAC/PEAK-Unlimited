@@ -8,29 +8,59 @@ namespace PEAKUnlimited.Core
     using System.Collections.Generic;
     using UnityEngine;
 
-
+    /// <summary>
+    /// Contains game logic for player validation and calculations.
+    /// </summary>
     public static class GameLogic
     {
+        /// <summary>
+        /// Validates the player count against the vanilla maximum.
+        /// </summary>
+        /// <param name="playerCount">The current player count.</param>
+        /// <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
+        /// <returns>True if the player count is valid.</returns>
         public static bool ValidatePlayerCount(int playerCount, int vanillaMaxPlayers)
         {
             return playerCount > 0 && playerCount <= 30;
         }
 
+        /// <summary>
+        /// Validates the maximum players setting.
+        /// </summary>
+        /// <param name="maxPlayers">The maximum players value.</param>
+        /// <returns>True if the maximum players is valid.</returns>
         public static bool ValidateMaxPlayers(int maxPlayers)
         {
             return maxPlayers > 0 && maxPlayers <= 30;
         }
 
+        /// <summary>
+        /// Validates the cheat marshmallows count.
+        /// </summary>
+        /// <param name="count">The cheat marshmallows count.</param>
+        /// <returns>True if the count is valid.</returns>
         public static bool ValidateCheatMarshmallows(int count)
         {
             return count >= 0 && count <= 30;
         }
 
+        /// <summary>
+        /// Validates the cheat backpacks count.
+        /// </summary>
+        /// <param name="count">The cheat backpacks count.</param>
+        /// <returns>True if the count is valid.</returns>
         public static bool ValidateCheatBackpacks(int count)
         {
             return count >= 0 && count <= 10;
         }
 
+        /// <summary>
+        /// Expands an array to accommodate extra players.
+        /// </summary>
+        /// <typeparam name="T">The type of array elements.</typeparam>
+        /// <param name="originalArray">The original array.</param>
+        /// <param name="newCount">The new count.</param>
+        /// <returns>The expanded array.</returns>
         public static T[] ExpandArrayForExtraPlayers<T>(T[] originalArray, int newCount)
         {
             var newArray = new T[newCount];
@@ -42,6 +72,13 @@ namespace PEAKUnlimited.Core
             return newArray;
         }
 
+        /// <summary>
+        /// Calculates the number of extra marshmallows needed.
+        /// </summary>
+        /// <param name="currentPlayers">The current number of players.</param>
+        /// <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
+        /// <param name="cheatMarshmallows">The cheat marshmallows setting.</param>
+        /// <returns>The number of extra marshmallows.</returns>
         public static int CalculateExtraMarshmallows(int currentPlayers, int vanillaMaxPlayers, int cheatMarshmallows)
         {
             if (cheatMarshmallows > 0)
@@ -52,11 +89,24 @@ namespace PEAKUnlimited.Core
             return Math.Max(0, currentPlayers - vanillaMaxPlayers);
         }
 
+        /// <summary>
+        /// Calculates the number of extra backpacks needed.
+        /// </summary>
+        /// <param name="currentPlayers">The current number of players.</param>
+        /// <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
+        /// <returns>The number of extra backpacks.</returns>
         public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers)
         {
             return CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true);
         }
 
+        /// <summary>
+        /// Calculates the number of extra backpacks needed with optional randomness.
+        /// </summary>
+        /// <param name="currentPlayers">The current number of players.</param>
+        /// <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
+        /// <param name="useRandom">Whether to use random calculation.</param>
+        /// <returns>The number of extra backpacks.</returns>
         public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers, bool useRandom)
         {
             int extraPlayers = currentPlayers - vanillaMaxPlayers;
@@ -66,7 +116,7 @@ namespace PEAKUnlimited.Core
             }
 
             double backpackNumber = extraPlayers * 0.25;
-            
+
             if (backpackNumber % 4 == 0)
             {
                 return (int)backpackNumber;
@@ -89,13 +139,27 @@ namespace PEAKUnlimited.Core
                         return baseNumber + 1;
                     }
                 }
+
                 return baseNumber;
             }
         }
 
-        // Delegate for ground placement logic, to allow mocking in tests
+        /// <summary>
+        /// Delegate for ground placement logic, to allow mocking in tests.
+        /// </summary>
+        /// <param name="vector">The position vector.</param>
+        /// <returns>The ground position.</returns>
         public delegate Vector3 SetToGroundDelegate(Vector3 vector);
 
+        /// <summary>
+        /// Gets evenly spaced points around a campfire.
+        /// </summary>
+        /// <param name="numPoints">The number of points to generate.</param>
+        /// <param name="innerRadius">The inner radius.</param>
+        /// <param name="outerRadius">The outer radius.</param>
+        /// <param name="campfirePosition">The campfire position.</param>
+        /// <param name="setToGround">The ground placement delegate.</param>
+        /// <returns>List of evenly spaced points.</returns>
         public static List<Vector3> GetEvenlySpacedPointsAroundCampfire(
             int numPoints,
             float innerRadius,

@@ -14,6 +14,36 @@
             Configuration settings for the plugin.
             </summary>
         </member>
+        <member name="P:PEAKUnlimited.Core.ConfigurationManager.PluginConfig.MaxPlayers">
+            <summary>
+            Gets or sets the maximum number of players.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.ConfigurationManager.PluginConfig.ExtraMarshmallows">
+            <summary>
+            Gets or sets a value indicating whether gets or sets whether to add extra marshmallows.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.ConfigurationManager.PluginConfig.ExtraBackpacks">
+            <summary>
+            Gets or sets a value indicating whether gets or sets whether to add extra backpacks.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.ConfigurationManager.PluginConfig.LateJoinMarshmallows">
+            <summary>
+            Gets or sets a value indicating whether gets or sets whether to add marshmallows for late-joining players.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.ConfigurationManager.PluginConfig.CheatExtraMarshmallows">
+            <summary>
+            Gets or sets the number of cheat extra marshmallows.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.ConfigurationManager.PluginConfig.CheatExtraBackpacks">
+            <summary>
+            Gets or sets the number of cheat extra backpacks.
+            </summary>
+        </member>
         <member name="M:PEAKUnlimited.Core.ConfigurationManager.ProcessConfiguration(PEAKUnlimited.Core.ConfigurationManager.PluginConfig)">
             <summary>
             Validates and processes configuration values.
@@ -54,6 +84,93 @@
             <param name="configCheatExtraBackpacks">Cheat backpacks config entry.</param>
             <returns>Processed configuration.</returns>
         </member>
+        <member name="T:PEAKUnlimited.Core.GameLogic">
+            <summary>
+            Contains game logic for player validation and calculations.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.ValidatePlayerCount(System.Int32,System.Int32)">
+            <summary>
+            Validates the player count against the vanilla maximum.
+            </summary>
+            <param name="playerCount">The current player count.</param>
+            <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
+            <returns>True if the player count is valid.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.ValidateMaxPlayers(System.Int32)">
+            <summary>
+            Validates the maximum players setting.
+            </summary>
+            <param name="maxPlayers">The maximum players value.</param>
+            <returns>True if the maximum players is valid.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.ValidateCheatMarshmallows(System.Int32)">
+            <summary>
+            Validates the cheat marshmallows count.
+            </summary>
+            <param name="count">The cheat marshmallows count.</param>
+            <returns>True if the count is valid.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.ValidateCheatBackpacks(System.Int32)">
+            <summary>
+            Validates the cheat backpacks count.
+            </summary>
+            <param name="count">The cheat backpacks count.</param>
+            <returns>True if the count is valid.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.ExpandArrayForExtraPlayers``1(``0[],System.Int32)">
+            <summary>
+            Expands an array to accommodate extra players.
+            </summary>
+            <typeparam name="T">The type of array elements.</typeparam>
+            <param name="originalArray">The original array.</param>
+            <param name="newCount">The new count.</param>
+            <returns>The expanded array.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.CalculateExtraMarshmallows(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Calculates the number of extra marshmallows needed.
+            </summary>
+            <param name="currentPlayers">The current number of players.</param>
+            <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
+            <param name="cheatMarshmallows">The cheat marshmallows setting.</param>
+            <returns>The number of extra marshmallows.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.CalculateExtraBackpacks(System.Int32,System.Int32)">
+            <summary>
+            Calculates the number of extra backpacks needed.
+            </summary>
+            <param name="currentPlayers">The current number of players.</param>
+            <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
+            <returns>The number of extra backpacks.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.CalculateExtraBackpacks(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Calculates the number of extra backpacks needed with optional randomness.
+            </summary>
+            <param name="currentPlayers">The current number of players.</param>
+            <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
+            <param name="useRandom">Whether to use random calculation.</param>
+            <returns>The number of extra backpacks.</returns>
+        </member>
+        <member name="T:PEAKUnlimited.Core.GameLogic.SetToGroundDelegate">
+            <summary>
+            Delegate for ground placement logic, to allow mocking in tests.
+            </summary>
+            <param name="vector">The position vector.</param>
+            <returns>The ground position.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameLogic.GetEvenlySpacedPointsAroundCampfire(System.Int32,System.Single,System.Single,UnityEngine.Vector3,PEAKUnlimited.Core.GameLogic.SetToGroundDelegate)">
+            <summary>
+            Gets evenly spaced points around a campfire.
+            </summary>
+            <param name="numPoints">The number of points to generate.</param>
+            <param name="innerRadius">The inner radius.</param>
+            <param name="outerRadius">The outer radius.</param>
+            <param name="campfirePosition">The campfire position.</param>
+            <param name="setToGround">The ground placement delegate.</param>
+            <returns>List of evenly spaced points.</returns>
+        </member>
         <member name="T:PEAKUnlimited.Core.GameStateManager">
             <summary>
             Manages game state including player counts and campfire tracking.
@@ -66,7 +183,7 @@
         </member>
         <member name="P:PEAKUnlimited.Core.GameStateManager.IsAfterAwake">
             <summary>
-            Gets whether the game is after the initial awake phase.
+            Gets a value indicating whether gets whether the game is after the initial awake phase.
             </summary>
         </member>
         <member name="P:PEAKUnlimited.Core.GameStateManager.VanillaMaxPlayersValue">
@@ -136,6 +253,39 @@
             Resets the game state for a new game.
             </summary>
         </member>
+        <member name="P:PEAKUnlimited.Core.GameStateManager.IsCurrentlyClimbing">
+            <summary>
+            Gets a value indicating whether the player is currently climbing.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.UpdateConfiguration(PEAKUnlimited.Core.ConfigurationManager.PluginConfig)">
+            <summary>
+            Updates the configuration.
+            </summary>
+            <param name="config">The new configuration.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.AddPlayer">
+            <summary>
+            Adds a player to the count.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.RemovePlayer">
+            <summary>
+            Removes a player from the count.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.DeactivateEndScreen(EndScreen)">
+            <summary>
+            Deactivates an end screen.
+            </summary>
+            <param name="endScreen">The end screen to deactivate.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.GameStateManager.DeleteEndScreen(EndScreen)">
+            <summary>
+            Deletes an end screen.
+            </summary>
+            <param name="endScreen">The end screen to delete.</param>
+        </member>
         <member name="T:PEAKUnlimited.Core.Interfaces.IItemService">
             <summary>
             Interface for item-related operations.
@@ -145,8 +295,32 @@
             <summary>
             Gets an item by its ID.
             </summary>
-            <param name="itemId">The item ID.</param>
-            <returns>The item.</returns>
+            <param name="itemId">The ID of the item to get.</param>
+            <returns>The item with the specified ID.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IItemService.SpawnExtraBackpacks(UnityEngine.Vector3,Segment)">
+            <summary>
+            Spawns extra backpacks at the specified position.
+            </summary>
+            <param name="position">The position to spawn backpacks at.</param>
+            <param name="segment">The segment to spawn backpacks in.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IItemService.SpawnExtraMarshmallows(UnityEngine.Vector3,Segment)">
+            <summary>
+            Spawns extra marshmallows at the specified position.
+            </summary>
+            <param name="position">The position to spawn marshmallows at.</param>
+            <param name="segment">The segment to spawn marshmallows in.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IItemService.SpawnLateJoinMarshmallow">
+            <summary>
+            Spawns a late join marshmallow.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IItemService.RemoveLateJoinMarshmallow">
+            <summary>
+            Removes a late join marshmallow.
+            </summary>
         </member>
         <member name="T:PEAKUnlimited.Core.Interfaces.INetworkService">
             <summary>
@@ -155,12 +329,12 @@
         </member>
         <member name="P:PEAKUnlimited.Core.Interfaces.INetworkService.IsConnected">
             <summary>
-            Gets whether the network is connected.
+            Gets a value indicating whether the network is connected.
             </summary>
         </member>
         <member name="P:PEAKUnlimited.Core.Interfaces.INetworkService.IsMasterClient">
             <summary>
-            Gets whether this client is the master client.
+            Gets a value indicating whether this client is the master client.
             </summary>
         </member>
         <member name="M:PEAKUnlimited.Core.Interfaces.INetworkService.Instantiate(System.String,UnityEngine.Vector3,UnityEngine.Quaternion)">
@@ -178,6 +352,36 @@
             </summary>
             <param name="gameObject">The game object to destroy.</param>
         </member>
+        <member name="T:PEAKUnlimited.Core.Interfaces.IUIManager">
+            <summary>
+            Interface for UI management operations.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.Interfaces.IUIManager.IsUIVisible">
+            <summary>
+            Gets a value indicating whether gets whether the UI is currently visible.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IUIManager.ShowConfigurationUI">
+            <summary>
+            Shows the configuration UI.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IUIManager.HideConfigurationUI">
+            <summary>
+            Hides the configuration UI.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IUIManager.ToggleConfigurationUI">
+            <summary>
+            Toggles the configuration UI visibility.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Interfaces.IUIManager.Update">
+            <summary>
+            Updates the UI manager (called every frame).
+            </summary>
+        </member>
         <member name="T:PEAKUnlimited.Core.Services.PhotonNetworkService">
             <summary>
             Photon network service implementation.
@@ -185,12 +389,12 @@
         </member>
         <member name="P:PEAKUnlimited.Core.Services.PhotonNetworkService.IsConnected">
             <summary>
-            Gets whether the network is connected.
+            Gets a value indicating whether gets whether the network is connected.
             </summary>
         </member>
         <member name="P:PEAKUnlimited.Core.Services.PhotonNetworkService.IsMasterClient">
             <summary>
-            Gets whether this client is the master client.
+            Gets a value indicating whether gets whether this client is the master client.
             </summary>
         </member>
         <member name="M:PEAKUnlimited.Core.Services.PhotonNetworkService.Instantiate(System.String,UnityEngine.Vector3,UnityEngine.Quaternion)">
@@ -219,6 +423,203 @@
             </summary>
             <param name="itemId">The item ID.</param>
             <returns>The item.</returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityItemService.SpawnExtraBackpacks(UnityEngine.Vector3,Segment)">
+            <summary>
+            Spawns extra backpacks at the specified position.
+            </summary>
+            <param name="position">The position to spawn backpacks at.</param>
+            <param name="segment">The segment to spawn backpacks in.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityItemService.SpawnExtraMarshmallows(UnityEngine.Vector3,Segment)">
+            <summary>
+            Spawns extra marshmallows at the specified position.
+            </summary>
+            <param name="position">The position to spawn marshmallows at.</param>
+            <param name="segment">The segment to spawn marshmallows in.</param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityItemService.SpawnLateJoinMarshmallow">
+            <summary>
+            Spawns a late join marshmallow.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityItemService.RemoveLateJoinMarshmallow">
+            <summary>
+            Removes a late join marshmallow.
+            </summary>
+        </member>
+        <member name="T:PEAKUnlimited.Core.Services.UnityUIManager">
+            <summary>
+            Unity UI manager implementation.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.Services.UnityUIManager.IsUIVisible">
+            <summary>
+            Gets a value indicating whether gets whether the UI is currently visible.
+            </summary>
+        </member>
+        <member name="P:PEAKUnlimited.Core.Services.UnityUIManager.IsCurrentlyClimbing">
+            <summary>
+            Gets a value indicating whether the player is currently climbing.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.Update">
+            <summary>
+            Update method to handle keyboard shortcuts and other UI updates.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.SetConfiguration(PEAKUnlimited.Core.ConfigurationManager.PluginConfig,System.Action)">
+            <summary>
+            Sets the current configuration for the UI to display and modify.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.SetGameStateManager(PEAKUnlimited.Core.GameStateManager)">
+            <summary>
+            Sets the game state manager reference.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.GetCurrentConfig">
+            <summary>
+            Gets the current configuration with any pending changes.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.ShowConfigurationUI">
+            <summary>
+            Shows the configuration UI.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.HideConfigurationUI">
+            <summary>
+            Hides the configuration UI.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.ToggleConfigurationUI">
+            <summary>
+            Toggles the configuration UI visibility.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.CreateConfigurationUI">
+            <summary>
+            Creates the configuration UI elements.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.CreateConfigurationControls">
+            <summary>
+            Creates the configuration controls (toggles, sliders, etc.).
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.CreateButtonPanel">
+            <summary>
+            Creates the button panel with save, reset, and close buttons.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.UpdateUIWithCurrentConfig">
+            <summary>
+            Updates the UI with current configuration values.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.UpdateStatusText">
+            <summary>
+            Updates the status text with current configuration info.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.SaveConfiguration">
+            <summary>
+            Saves the current configuration.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.ResetConfiguration">
+            <summary>
+            Resets the configuration to original values.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.CanModifyConfig">
+            <summary>
+            Checks if configuration can be modified (not climbing).
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.UpdateTitleIfNeeded">
+            <summary>
+            Updates the title if the climbing state has changed.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.Services.UnityUIManager.UpdateCanvasReference">
+            <summary>
+            Updates the canvas reference for the configuration panel.
+            </summary>
+        </member>
+        <member name="T:PEAKUnlimited.Core.UI.UIControlFactory">
+            <summary>
+            Factory for creating UI controls.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.UI.UIControlFactory.CreateToggleControl(UnityEngine.GameObject,System.String,System.Int32,System.String,System.Action,System.Boolean)">
+            <summary>
+            Creates a toggle control with tooltip.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.UI.UIControlFactory.CreateSliderControl(UnityEngine.GameObject,System.String,System.Int32,System.Single,System.Single,System.Single,System.String,System.Action{System.Single},System.Boolean)">
+            <summary>
+            Creates a slider control with tooltip.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.UI.UIControlFactory.CreateIntegerSliderControl(UnityEngine.GameObject,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.String,System.Action{System.Int32},System.Boolean)">
+            <summary>
+            Creates an integer slider control with tooltip.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PEAKUnlimited.Core.UI.UIControlFactory.CreateButton(UnityEngine.GameObject,System.String,UnityEngine.Vector2,UnityEngine.Vector2,UnityEngine.Color,System.Action)">
+            <summary>
+            Creates a button in the button panel.
+            </summary>
+        </member>
+        <member name="T:PEAKUnlimited.Core.UI.UIKeyboardHandler">
+            <summary>
+            Handles keyboard shortcuts for the configuration UI.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.UI.UIKeyboardHandler.#ctor(System.Action,System.Action,System.Action,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:PEAKUnlimited.Core.UI.UIKeyboardHandler"/> class.
+            </summary>
+            <param name="onSave"></param>
+            <param name="onReset"></param>
+            <param name="onClose"></param>
+            <param name="isUIVisible"></param>
+        </member>
+        <member name="M:PEAKUnlimited.Core.UI.UIKeyboardHandler.HandleKeyboardShortcuts">
+            <summary>
+            Handles keyboard shortcuts for the UI.
+            </summary>
+        </member>
+        <member name="T:PEAKUnlimited.Core.UI.UIPersistenceComponent">
+            <summary>
+            Component to ensure UI panel stays active and visible.
+            </summary>
+        </member>
+        <member name="T:PEAKUnlimited.Core.UI.UIPlayerController">
+            <summary>
+            Handles pausing and resuming player movement when UI is shown/hidden.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.UI.UIPlayerController.PausePlayerMovement">
+            <summary>
+            Pauses player movement and frees mouse cursor.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Core.UI.UIPlayerController.ResumePlayerMovement">
+            <summary>
+            Resumes player movement and locks mouse cursor.
+            </summary>
+        </member>
+        <member name="M:PEAKUnlimited.Plugin.ApplyConfigurationFromUI">
+            <summary>
+            Applies configuration changes from the UI.
+            </summary>
         </member>
         <member name="F:PEAKUnlimited.Plugin.Id">
             <summary>
