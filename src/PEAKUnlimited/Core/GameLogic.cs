@@ -97,7 +97,7 @@ namespace PEAKUnlimited.Core
         /// <returns>The number of extra backpacks.</returns>
         public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers)
         {
-            return CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true);
+            return CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => new System.Random().NextDouble());
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace PEAKUnlimited.Core
         /// <param name="vanillaMaxPlayers">The vanilla maximum players.</param>
         /// <param name="useRandom">Whether to use random calculation.</param>
         /// <returns>The number of extra backpacks.</returns>
-        public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers, bool useRandom)
+        public static int CalculateExtraBackpacks(int currentPlayers, int vanillaMaxPlayers, bool useRandom, Func<double> randomProvider = null)
         {
             int extraPlayers = currentPlayers - vanillaMaxPlayers;
             if (extraPlayers <= 0)
@@ -126,8 +126,11 @@ namespace PEAKUnlimited.Core
                 int baseNumber = (int)backpackNumber;
                 if (useRandom)
                 {
-                    var random = new System.Random();
-                    if (random.NextDouble() <= backpackNumber - baseNumber)
+                    if (randomProvider == null)
+                    {
+                        randomProvider = () => new System.Random().NextDouble();
+                    }
+                    if (randomProvider() <= backpackNumber - baseNumber)
                     {
                         return baseNumber + 1;
                     }

@@ -71,12 +71,14 @@ namespace PEAKUnlimited.Tests
             Assert.AreEqual(expectedBackpacks, actualBackpacks,
                 $"Should spawn {expectedBackpacks} extra backpacks for {currentPlayers} players (deterministic case)");
 
-            // Test cases with randomness
+            // Test cases with randomness (simulate randomProvider returning 0.1 and 0.9)
             currentPlayers = 9; // 5 extra players = 1.25 backpacks = 1 or 2 (with randomness)
-            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, false);
-            Assert.IsTrue(
-                actualBackpacks >= 1 && actualBackpacks <= 2,
-                $"Should spawn 1 or 2 extra backpacks for {currentPlayers} players (random case)");
+            // Simulate randomProvider returning 0.1 (should NOT increment)
+            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => 0.1);
+            Assert.AreEqual(1, actualBackpacks, "Should spawn 1 extra backpack for 9 players when randomProvider returns 0.1");
+            // Simulate randomProvider returning 0.9 (should increment)
+            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => 0.9);
+            Assert.AreEqual(2, actualBackpacks, "Should spawn 2 extra backpacks for 9 players when randomProvider returns 0.9");
 
             currentPlayers = 12; // 8 extra players = 2.0 backpacks = always 2
             expectedBackpacks = 2;
@@ -93,22 +95,22 @@ namespace PEAKUnlimited.Tests
 
             // Test edge cases where randomness should apply
             int currentPlayers = 5; // 1 extra player = 0.25 backpacks
-            int actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, false);
-            Assert.IsTrue(
-                actualBackpacks >= 0 && actualBackpacks <= 1,
-                "5 players should have 0 or 1 backpacks due to randomness");
+            int actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => 0.1);
+            Assert.AreEqual(0, actualBackpacks, "Should spawn 0 extra backpacks for 5 players when randomProvider returns 0.1");
+            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => 0.9);
+            Assert.AreEqual(1, actualBackpacks, "Should spawn 1 extra backpack for 5 players when randomProvider returns 0.9");
 
             currentPlayers = 9; // 5 extra players = 1.25 backpacks
-            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, false);
-            Assert.IsTrue(
-                actualBackpacks >= 1 && actualBackpacks <= 2,
-                "9 players should have 1 or 2 backpacks due to randomness");
+            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => 0.1);
+            Assert.AreEqual(1, actualBackpacks, "Should spawn 1 extra backpack for 9 players when randomProvider returns 0.1");
+            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => 0.9);
+            Assert.AreEqual(2, actualBackpacks, "Should spawn 2 extra backpacks for 9 players when randomProvider returns 0.9");
 
             currentPlayers = 13; // 9 extra players = 2.25 backpacks
-            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, false);
-            Assert.IsTrue(
-                actualBackpacks >= 2 && actualBackpacks <= 3,
-                "13 players should have 2 or 3 backpacks due to randomness");
+            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => 0.1);
+            Assert.AreEqual(2, actualBackpacks, "Should spawn 2 extra backpacks for 13 players when randomProvider returns 0.1");
+            actualBackpacks = GameLogic.CalculateExtraBackpacks(currentPlayers, vanillaMaxPlayers, true, () => 0.9);
+            Assert.AreEqual(3, actualBackpacks, "Should spawn 3 extra backpacks for 13 players when randomProvider returns 0.9");
         }
     }
 }
