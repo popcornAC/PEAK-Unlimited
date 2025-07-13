@@ -292,7 +292,7 @@ public partial class Plugin : BaseUnityPlugin
     private static List<GameObject> SpawnMarshmallows(int number, Vector3 campfirePosition, Segment advanceToSegment)
     {
         List<GameObject> marshmallows = new List<GameObject>();
-        Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[46];
+        Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[ItemIds.Marshmallow];
         
         foreach (Vector3 position in GetEvenlySpacedPointsAroundCampfire(number, 2.5f, 3f, campfirePosition,
                      advanceToSegment))

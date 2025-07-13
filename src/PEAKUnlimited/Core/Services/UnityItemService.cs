@@ -14,6 +14,7 @@ namespace PEAKUnlimited.Core.Services
     /// </summary>
     public class UnityItemService : IItemService
     {
+
         /// <summary>
         /// Gets an item by its ID.
         /// </summary>
@@ -46,7 +47,7 @@ namespace PEAKUnlimited.Core.Services
             }
             if (number > 0)
             {
-                Item backpack = GetItem(6); // Backpack item ID
+                Item backpack = GetItem(ItemIds.Backpack);
                 for (int i = 0; i < number; i++)
                 {
                     Vector3 spawnPos = Plugin.GetEvenlySpacedPointsAroundCampfire(number, 3.3f, 3.7f, position, segment)[i];
@@ -87,7 +88,7 @@ namespace PEAKUnlimited.Core.Services
             }
             if (amountToSpawn > 0)
             {
-                Item marshmallow = GetItem(46); // Marshmallow item ID
+                Item marshmallow = GetItem(ItemIds.Marshmallow);
                 var marshmallows = new List<GameObject>();
                 foreach (Vector3 spawnPos in Plugin.GetEvenlySpacedPointsAroundCampfire(amountToSpawn, 2.5f, 3f, position, segment))
                 {
@@ -113,7 +114,7 @@ namespace PEAKUnlimited.Core.Services
             var gameState = plugin.gameStateManager;
             foreach (var campfire in gameState.CampfireList)
             {
-                Item marshmallow = GetItem(46);
+                Item marshmallow = GetItem(ItemIds.Marshmallow);
                 Vector3 position = campfire.transform.position;
                 var marshmallowObj = Photon.Pun.PhotonNetwork.Instantiate("0_Items/" + marshmallow.name, position, Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f));
                 gameState.AddMarshmallowsToCampfire(campfire, new List<GameObject> { marshmallowObj });
