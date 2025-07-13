@@ -4,6 +4,7 @@
 
 namespace PEAKUnlimited.Core.UI
 {
+    using System;
     using UnityEngine;
     using UnityEngine.UI;
 
@@ -18,6 +19,21 @@ namespace PEAKUnlimited.Core.UI
         /// <returns></returns>
         public static Toggle CreateToggleControl(GameObject parent, string label, int index, string tooltip, System.Action onToggle, bool isCurrentlyClimbing)
         {
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+
+            if (string.IsNullOrEmpty(label))
+            {
+                throw new ArgumentException("Label cannot be null or empty", nameof(label));
+            }
+
+            if (onToggle == null)
+            {
+                throw new ArgumentNullException(nameof(onToggle));
+            }
+
             GameObject toggleObject = new GameObject($"Toggle_{label.Replace(" ", string.Empty)}");
             toggleObject.transform.SetParent(parent.transform, false);
 
@@ -107,6 +123,26 @@ namespace PEAKUnlimited.Core.UI
         /// <returns></returns>
         public static Slider CreateSliderControl(GameObject parent, string label, int index, float minValue, float maxValue, float defaultValue, string tooltip, System.Action<float> onValueChanged, bool isCurrentlyClimbing)
         {
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+
+            if (string.IsNullOrEmpty(label))
+            {
+                throw new ArgumentException("Label cannot be null or empty", nameof(label));
+            }
+
+            if (onValueChanged == null)
+            {
+                throw new ArgumentNullException(nameof(onValueChanged));
+            }
+
+            if (minValue >= maxValue)
+            {
+                throw new ArgumentException("minValue must be less than maxValue");
+            }
+
             GameObject sliderObject = new GameObject($"Slider_{label.Replace(" ", string.Empty)}");
             sliderObject.transform.SetParent(parent.transform, false);
 
@@ -217,6 +253,26 @@ namespace PEAKUnlimited.Core.UI
         /// <returns></returns>
         public static Slider CreateIntegerSliderControl(GameObject parent, string label, int index, int minValue, int maxValue, int defaultValue, string tooltip, System.Action<int> onValueChanged, bool isCurrentlyClimbing)
         {
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+
+            if (string.IsNullOrEmpty(label))
+            {
+                throw new ArgumentException("Label cannot be null or empty", nameof(label));
+            }
+
+            if (onValueChanged == null)
+            {
+                throw new ArgumentNullException(nameof(onValueChanged));
+            }
+
+            if (minValue >= maxValue)
+            {
+                throw new ArgumentException("minValue must be less than maxValue");
+            }
+
             GameObject sliderObject = new GameObject($"Slider_{label.Replace(" ", string.Empty)}");
             sliderObject.transform.SetParent(parent.transform, false);
 
@@ -328,6 +384,21 @@ namespace PEAKUnlimited.Core.UI
         /// </summary>
         public static void CreateButton(GameObject parent, string text, Vector2 anchorMin, Vector2 anchorMax, Color color, System.Action onClick)
         {
+            if (parent == null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+
+            if (string.IsNullOrEmpty(text))
+            {
+                throw new ArgumentException("Text cannot be null or empty", nameof(text));
+            }
+
+            if (onClick == null)
+            {
+                throw new ArgumentNullException(nameof(onClick));
+            }
+
             GameObject buttonObject = new GameObject(text + "Button");
             buttonObject.transform.SetParent(parent.transform, false);
 

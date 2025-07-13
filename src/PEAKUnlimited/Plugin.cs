@@ -35,13 +35,13 @@ public partial class Plugin : BaseUnityPlugin
     private Harmony harmony;
     private static FieldInfo oldPipField;
 
-    public ConfigurationManager.PluginConfig pluginConfig;
-    public GameStateManager gameStateManager;
-    public INetworkService networkService;
-    public IItemService itemService;
-    public IUIManager uiManager;
+    public ConfigurationManager.PluginConfig PluginConfig { get; private set; }
+    public GameStateManager GameStateManager { get; private set; }
+    public INetworkService NetworkService { get; private set; }
+    public IItemService ItemService { get; private set; }
+    public IUIManager UIManager { get; private set; }
 
-    public static Plugin currentInstance;
+    public static Plugin CurrentInstance { get; private set; }
 
     // Add these fields to store config entries
     private BepInEx.Configuration.ConfigEntry<int> configMaxPlayers;
@@ -54,7 +54,7 @@ public partial class Plugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
-        currentInstance = this;
+        CurrentInstance = this;
 
         // Initialize configuration
         this.InitializeConfiguration();
@@ -71,16 +71,16 @@ public partial class Plugin : BaseUnityPlugin
 
     private void InitializeServices()
     {
-        this.gameStateManager = new GameStateManager();
-        this.networkService = new PhotonNetworkService();
-        this.itemService = new UnityItemService();
-        this.uiManager = new UnityUIManager();
+        this.GameStateManager = new GameStateManager();
+        this.NetworkService = new PhotonNetworkService();
+        this.ItemService = new UnityItemService();
+        this.UIManager = new UnityUIManager();
 
         // Set the configuration in the UI manager
-        if (this.uiManager is UnityUIManager unityUIManager)
+        if (this.UIManager is UnityUIManager unityUIManager)
         {
-            unityUIManager.SetConfiguration(this.pluginConfig, this.ApplyConfigurationFromUI);
-            unityUIManager.SetGameStateManager(this.gameStateManager);
+            unityUIManager.SetConfiguration(this.PluginConfig, this.ApplyConfigurationFromUI);
+            unityUIManager.SetGameStateManager(this.GameStateManager);
         }
     }
 
@@ -122,7 +122,7 @@ public partial class Plugin : BaseUnityPlugin
             0,
             "(Cheat, disabled by default) Sets how many backpacks will spawn as a cheat, requires ExtraBackpacks to also be enabled. Capped at 10.");
 
-        this.pluginConfig = ConfigurationManager.CreateFromBepInExConfig(
+        this.PluginConfig = ConfigurationManager.CreateFromBepInExConfig(
             this.configMaxPlayers,
             this.configExtraMarshmallows,
             this.configExtraBackpacks,
@@ -142,7 +142,7 @@ public partial class Plugin : BaseUnityPlugin
 
     private void ApplyConfiguration()
     {
-        NetworkConnector.MAX_PLAYERS = this.pluginConfig.MaxPlayers;
+        NetworkConnector.MAX_PLAYERS = this.PluginConfig.MaxPlayers;
         Logger.LogInfo($"Plugin {Id} set the Max Players to {NetworkConnector.MAX_PLAYERS}!");
     }
 
@@ -152,24 +152,24 @@ public partial class Plugin : BaseUnityPlugin
     public void ApplyConfigurationFromUI()
     {
         // Update network connector with new max players
-        NetworkConnector.MAX_PLAYERS = this.pluginConfig.MaxPlayers;
+        NetworkConnector.MAX_PLAYERS = this.PluginConfig.MaxPlayers;
 
         // Update game state manager with new configuration
-        if (this.gameStateManager != null)
+        if (this.GameStateManager != null)
         {
-            this.gameStateManager.UpdateConfiguration(this.pluginConfig);
+            this.GameStateManager.UpdateConfiguration(this.PluginConfig);
         }
 
         // Reapply Harmony patches if needed
         this.ReapplyHarmonyPatches();
 
         // Sync plugin config to config file
-        this.configMaxPlayers.Value = this.pluginConfig.MaxPlayers;
-        this.configExtraMarshmallows.Value = this.pluginConfig.ExtraMarshmallows;
-        this.configExtraBackpacks.Value = this.pluginConfig.ExtraBackpacks;
-        this.configLateMarshmallows.Value = this.pluginConfig.LateJoinMarshmallows;
-        this.configCheatExtraMarshmallows.Value = this.pluginConfig.CheatExtraMarshmallows;
-        this.configCheatExtraBackpacks.Value = this.pluginConfig.CheatExtraBackpacks;
+        this.configMaxPlayers.Value = this.PluginConfig.MaxPlayers;
+        this.configExtraMarshmallows.Value = this.PluginConfig.ExtraMarshmallows;
+        this.configExtraBackpacks.Value = this.PluginConfig.ExtraBackpacks;
+        this.configLateMarshmallows.Value = this.PluginConfig.LateJoinMarshmallows;
+        this.configCheatExtraMarshmallows.Value = this.PluginConfig.CheatExtraMarshmallows;
+        this.configCheatExtraBackpacks.Value = this.PluginConfig.CheatExtraBackpacks;
         this.Config.Save();
     }
 
@@ -187,7 +187,7 @@ public partial class Plugin : BaseUnityPlugin
         this.harmony.UnpatchSelf();
 
         // Reapply patches based on current configuration
-        if (this.pluginConfig.ExtraMarshmallows)
+        if (this.PluginConfig.ExtraMarshmallows)
         {
             this.harmony.PatchAll(typeof(AwakePatch));
             this.harmony.PatchAll(typeof(OnPlayerLeftRoomPatch));
@@ -226,15 +226,15 @@ public partial class Plugin : BaseUnityPlugin
     {
         if (newConfig == null)
         {
-            return;
+            throw new ArgumentNullException(nameof(newConfig));
         }
 
-        this.pluginConfig.MaxPlayers = newConfig.MaxPlayers;
-        this.pluginConfig.ExtraMarshmallows = newConfig.ExtraMarshmallows;
-        this.pluginConfig.ExtraBackpacks = newConfig.ExtraBackpacks;
-        this.pluginConfig.LateJoinMarshmallows = newConfig.LateJoinMarshmallows;
-        this.pluginConfig.CheatExtraMarshmallows = newConfig.CheatExtraMarshmallows;
-        this.pluginConfig.CheatExtraBackpacks = newConfig.CheatExtraBackpacks;
+        this.PluginConfig.MaxPlayers = newConfig.MaxPlayers;
+        this.PluginConfig.ExtraMarshmallows = newConfig.ExtraMarshmallows;
+        this.PluginConfig.ExtraBackpacks = newConfig.ExtraBackpacks;
+        this.PluginConfig.LateJoinMarshmallows = newConfig.LateJoinMarshmallows;
+        this.PluginConfig.CheatExtraMarshmallows = newConfig.CheatExtraMarshmallows;
+        this.PluginConfig.CheatExtraBackpacks = newConfig.CheatExtraBackpacks;
     }
 
     private void SetupHarmonyPatches()
@@ -242,7 +242,7 @@ public partial class Plugin : BaseUnityPlugin
         this.harmony = new Harmony(Id);
 
         // Apply patches based on configuration
-        if (this.pluginConfig.ExtraMarshmallows)
+        if (this.PluginConfig.ExtraMarshmallows)
         {
             this.harmony.PatchAll(typeof(AwakePatch));
             this.harmony.PatchAll(typeof(OnPlayerLeftRoomPatch));
@@ -259,26 +259,26 @@ public partial class Plugin : BaseUnityPlugin
     private void Update()
     {
         // Update UI manager
-        if (this.uiManager != null)
+        if (this.UIManager != null)
         {
-            this.uiManager.Update();
+            this.UIManager.Update();
         }
 
         // Check for F1 key to toggle configuration UI
         if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.F1))
         {
-            if (this.uiManager != null)
+            if (this.UIManager != null)
             {
-                this.uiManager.ToggleConfigurationUI();
+                this.UIManager.ToggleConfigurationUI();
             }
         }
 
         // Check for ESC key to close configuration UI
         if (UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Escape))
         {
-            if (this.uiManager != null && this.uiManager.IsUIVisible)
+            if (this.UIManager != null && this.UIManager.IsUIVisible)
             {
-                this.uiManager.HideConfigurationUI();
+                this.UIManager.HideConfigurationUI();
             }
         }
     }
@@ -324,19 +324,19 @@ public partial class Plugin : BaseUnityPlugin
         [HarmonyPostfix]
         private static void Postfix(Campfire __instance)
         {
-            if (currentInstance == null || currentInstance.pluginConfig == null)
+            if (CurrentInstance == null || CurrentInstance.PluginConfig == null)
             {
                 return;
             }
 
-            if (currentInstance.pluginConfig.ExtraBackpacks)
+            if (CurrentInstance.PluginConfig.ExtraBackpacks)
             {
-                currentInstance.itemService.SpawnExtraBackpacks(__instance.transform.position, __instance.advanceToSegment);
+                CurrentInstance.ItemService.SpawnExtraBackpacks(__instance.transform.position, __instance.advanceToSegment);
             }
 
-            if (currentInstance.pluginConfig.ExtraMarshmallows)
+            if (CurrentInstance.PluginConfig.ExtraMarshmallows)
             {
-                currentInstance.itemService.SpawnExtraMarshmallows(__instance.transform.position, __instance.advanceToSegment);
+                CurrentInstance.ItemService.SpawnExtraMarshmallows(__instance.transform.position, __instance.advanceToSegment);
             }
         }
     }
@@ -347,15 +347,15 @@ public partial class Plugin : BaseUnityPlugin
         [HarmonyPostfix]
         private static void Postfix(PlayerConnectionLog __instance)
         {
-            if (currentInstance == null || currentInstance.pluginConfig == null || !currentInstance.pluginConfig.LateJoinMarshmallows)
+            if (CurrentInstance == null || CurrentInstance.PluginConfig == null || !CurrentInstance.PluginConfig.LateJoinMarshmallows)
             {
                 return;
             }
 
-            if (currentInstance.networkService.IsMasterClient)
+            if (CurrentInstance.NetworkService.IsMasterClient)
             {
-                currentInstance.gameStateManager.AddPlayer();
-                currentInstance.itemService.SpawnLateJoinMarshmallow();
+                CurrentInstance.GameStateManager.AddPlayer();
+                CurrentInstance.ItemService.SpawnLateJoinMarshmallow();
             }
         }
     }
@@ -366,15 +366,15 @@ public partial class Plugin : BaseUnityPlugin
         [HarmonyPostfix]
         private static void Postfix(PlayerConnectionLog __instance)
         {
-            if (currentInstance == null || currentInstance.pluginConfig == null || !currentInstance.pluginConfig.LateJoinMarshmallows)
+            if (CurrentInstance == null || CurrentInstance.PluginConfig == null || !CurrentInstance.PluginConfig.LateJoinMarshmallows)
             {
                 return;
             }
 
-            if (currentInstance.networkService.IsMasterClient)
+            if (CurrentInstance.NetworkService.IsMasterClient)
             {
-                currentInstance.gameStateManager.RemovePlayer();
-                currentInstance.itemService.RemoveLateJoinMarshmallow();
+                CurrentInstance.GameStateManager.RemovePlayer();
+                CurrentInstance.ItemService.RemoveLateJoinMarshmallow();
             }
         }
     }
@@ -385,7 +385,7 @@ public partial class Plugin : BaseUnityPlugin
         [HarmonyPrefix]
         private static void Prefix(WaitingForPlayersUI __instance)
         {
-            if (currentInstance == null)
+            if (CurrentInstance == null)
             {
                 return;
             }
@@ -399,7 +399,7 @@ public partial class Plugin : BaseUnityPlugin
             Image original = __instance.scoutImages[0];
             for (int i = 0; i < Character.AllCharacters.Count; i++)
             {
-                if (i < currentInstance.gameStateManager.VanillaMaxPlayersValue)
+                if (i < CurrentInstance.GameStateManager.VanillaMaxPlayersValue)
                 {
                     newScoutImages[i] = __instance.scoutImages[i];
                 }
@@ -419,12 +419,12 @@ public partial class Plugin : BaseUnityPlugin
         [HarmonyPostfix]
         private static void Postfix(EndScreen __instance)
         {
-            if (currentInstance == null)
+            if (CurrentInstance == null)
             {
                 return;
             }
 
-            currentInstance.gameStateManager.DeleteEndScreen(__instance);
+            CurrentInstance.GameStateManager.DeleteEndScreen(__instance);
         }
     }
 
@@ -434,12 +434,12 @@ public partial class Plugin : BaseUnityPlugin
         [HarmonyPostfix]
         private static void Postfix(EndScreen __instance)
         {
-            if (currentInstance == null)
+            if (CurrentInstance == null)
             {
                 return;
             }
 
-            currentInstance.gameStateManager.DeactivateEndScreen(__instance);
+            CurrentInstance.GameStateManager.DeactivateEndScreen(__instance);
         }
     }
 
@@ -449,7 +449,7 @@ public partial class Plugin : BaseUnityPlugin
         [HarmonyPostfix]
         private static void Postfix(EndScreen __instance)
         {
-            if (currentInstance == null)
+            if (CurrentInstance == null)
             {
                 return;
             }
@@ -459,7 +459,7 @@ public partial class Plugin : BaseUnityPlugin
                 Logger.LogInfo("Deactivating an end screen");
 
                 // Don't display the extra names since it blocks the chart
-                currentInstance.networkService.Destroy(__instance.scoutWindows[i].gameObject);
+                CurrentInstance.NetworkService.Destroy(__instance.scoutWindows[i].gameObject);
                 Logger.LogInfo("Deleted an end screen");
             }
         }

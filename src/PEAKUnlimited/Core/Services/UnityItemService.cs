@@ -32,9 +32,14 @@ namespace PEAKUnlimited.Core.Services
         public void SpawnExtraBackpacks(Vector3 position, Segment segment)
         {
             // Use the original logic for spawning extra backpacks
-            var plugin = Plugin.currentInstance;
-            var gameState = plugin.gameStateManager;
-            var config = plugin.pluginConfig;
+            var plugin = Plugin.CurrentInstance;
+            if (plugin?.GameStateManager == null || plugin?.PluginConfig == null)
+            {
+                return;
+            }
+
+            var gameState = plugin.GameStateManager;
+            var config = plugin.PluginConfig;
             int number = 0;
             if (config.CheatExtraBackpacks > 0 && config.CheatExtraBackpacks <= 10)
             {
@@ -69,9 +74,14 @@ namespace PEAKUnlimited.Core.Services
         public void SpawnExtraMarshmallows(Vector3 position, Segment segment)
         {
             // Use the original logic for spawning extra marshmallows
-            var plugin = Plugin.currentInstance;
-            var gameState = plugin.gameStateManager;
-            var config = plugin.pluginConfig;
+            var plugin = Plugin.CurrentInstance;
+            if (plugin?.GameStateManager == null || plugin?.PluginConfig == null)
+            {
+                return;
+            }
+
+            var gameState = plugin.GameStateManager;
+            var config = plugin.PluginConfig;
             int amountToSpawn = 0;
             if (config.CheatExtraMarshmallows > 0)
             {
@@ -109,8 +119,13 @@ namespace PEAKUnlimited.Core.Services
         public void SpawnLateJoinMarshmallow()
         {
             // For each campfire, spawn a marshmallow for the new player
-            var plugin = Plugin.currentInstance;
-            var gameState = plugin.gameStateManager;
+            var plugin = Plugin.CurrentInstance;
+            if (plugin?.GameStateManager == null)
+            {
+                return;
+            }
+
+            var gameState = plugin.GameStateManager;
             foreach (var campfire in gameState.CampfireList)
             {
                 Item marshmallow = GetItem(46);
@@ -126,14 +141,19 @@ namespace PEAKUnlimited.Core.Services
         public void RemoveLateJoinMarshmallow()
         {
             // For each campfire, remove a marshmallow for the player who left
-            var plugin = Plugin.currentInstance;
-            var gameState = plugin.gameStateManager;
+            var plugin = Plugin.CurrentInstance;
+            if (plugin?.GameStateManager == null || plugin?.NetworkService == null)
+            {
+                return;
+            }
+
+            var gameState = plugin.GameStateManager;
             foreach (var campfire in gameState.CampfireList)
             {
                 if (gameState.Marshmallows.TryGetValue(campfire, out var marshmallowList) && marshmallowList.Count > 0)
                 {
                     var marshmallow = marshmallowList[0];
-                    plugin.networkService.Destroy(marshmallow);
+                    plugin.NetworkService.Destroy(marshmallow);
                     gameState.RemoveMarshmallowFromCampfire(campfire, marshmallow);
                 }
             }

@@ -547,8 +547,8 @@ namespace PEAKUnlimited.Core.Services
                 return;
             }
 
-            // Get the main plugin instance and update its config
-            var plugin = Plugin.currentInstance;
+            // Get the main plugin instance and update its config using proper public method
+            var plugin = Plugin.CurrentInstance;
             if (plugin != null)
             {
                 plugin.UpdatePluginConfiguration(this.currentConfig);

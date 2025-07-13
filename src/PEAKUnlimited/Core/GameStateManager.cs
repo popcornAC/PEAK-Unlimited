@@ -79,6 +79,11 @@ namespace PEAKUnlimited.Core
         /// <param name="campfire">The campfire to add.</param>
         public void AddCampfire(Campfire campfire)
         {
+            if (campfire == null)
+            {
+                return;
+            }
+
             if (!this.campfireList.Contains(campfire))
             {
                 this.campfireList.Add(campfire);
@@ -92,6 +97,11 @@ namespace PEAKUnlimited.Core
         /// <param name="marshmallowObjects">The marshmallow game objects.</param>
         public void AddMarshmallowsToCampfire(Campfire campfire, List<GameObject> marshmallowObjects)
         {
+            if (campfire == null || marshmallowObjects == null)
+            {
+                return;
+            }
+
             if (!this.marshmallows.ContainsKey(campfire))
             {
                 this.marshmallows[campfire] = new List<GameObject>();
@@ -107,6 +117,11 @@ namespace PEAKUnlimited.Core
         /// <param name="marshmallow">The marshmallow to remove.</param>
         public void RemoveMarshmallowFromCampfire(Campfire campfire, GameObject marshmallow)
         {
+            if (campfire == null || marshmallow == null)
+            {
+                return;
+            }
+
             if (this.marshmallows.ContainsKey(campfire))
             {
                 this.marshmallows[campfire].Remove(marshmallow);

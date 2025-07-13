@@ -12,6 +12,13 @@ namespace PEAKUnlimited.Core
     /// </summary>
     public class ConfigurationManager
     {
+        // Configuration limits
+        private const int MAX_PLAYERS_LIMIT = 30;
+        private const int MIN_PLAYERS_LIMIT = 1;
+        private const int MAX_CHEAT_MARSHMALLOWS = 30;
+        private const int MAX_CHEAT_BACKPACKS = 10;
+        private const int MIN_CHEAT_VALUE = 0;
+
         /// <summary>
         /// Configuration settings for the plugin.
         /// </summary>
@@ -87,12 +94,12 @@ namespace PEAKUnlimited.Core
         {
             if (maxPlayers <= 0)
             {
-                return 1;
+                return MIN_PLAYERS_LIMIT;
             }
 
-            if (maxPlayers > 30)
+            if (maxPlayers > MAX_PLAYERS_LIMIT)
             {
-                return 30;
+                return MAX_PLAYERS_LIMIT;
             }
 
             return maxPlayers;
@@ -105,14 +112,14 @@ namespace PEAKUnlimited.Core
         /// <returns>The validated and clamped value.</returns>
         public static int ValidateAndClampCheatMarshmallows(int cheatMarshmallows)
         {
-            if (cheatMarshmallows < 0)
+            if (cheatMarshmallows < MIN_CHEAT_VALUE)
             {
-                return 0;
+                return MIN_CHEAT_VALUE;
             }
 
-            if (cheatMarshmallows > 30)
+            if (cheatMarshmallows > MAX_CHEAT_MARSHMALLOWS)
             {
-                return 30;
+                return MAX_CHEAT_MARSHMALLOWS;
             }
 
             return cheatMarshmallows;
@@ -125,14 +132,14 @@ namespace PEAKUnlimited.Core
         /// <returns>The validated and clamped value.</returns>
         public static int ValidateAndClampCheatBackpacks(int cheatBackpacks)
         {
-            if (cheatBackpacks < 0)
+            if (cheatBackpacks < MIN_CHEAT_VALUE)
             {
-                return 0;
+                return MIN_CHEAT_VALUE;
             }
 
-            if (cheatBackpacks > 10)
+            if (cheatBackpacks > MAX_CHEAT_BACKPACKS)
             {
-                return 10;
+                return MAX_CHEAT_BACKPACKS;
             }
 
             return cheatBackpacks;
