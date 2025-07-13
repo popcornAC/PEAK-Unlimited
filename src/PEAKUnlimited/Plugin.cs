@@ -293,7 +293,7 @@ public partial class Plugin : BaseUnityPlugin
     {
         List<GameObject> marshmallows = new List<GameObject>();
         Item obj = SingletonAsset<ItemDatabase>.Instance.itemLookup[46];
-        
+
         foreach (Vector3 position in GetEvenlySpacedPointsAroundCampfire(number, 2.5f, 3f, campfirePosition,
                      advanceToSegment))
         {

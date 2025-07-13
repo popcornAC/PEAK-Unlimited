@@ -57,7 +57,7 @@ namespace PEAKUnlimited.Core.Services
         public void SetConfiguration(ConfigurationManager.PluginConfig config, System.Action onSaved = null)
         {
             this.currentConfig = config;
-            
+
             // Store default values for reset functionality
             this.originalConfig = ConfigurationManager.Default;
 
