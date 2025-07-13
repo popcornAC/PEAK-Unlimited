@@ -32,6 +32,7 @@ Only the host needs to install!
 ![image](https://github.com/user-attachments/assets/403d9a1d-16a4-409c-a046-bc56141ac0ca) <br>
 3.) Start the game and close it again, this does the first time set up for Bepinex. <br>
 - Linux users: set the launch option `WINEDLLOVERRIDES="winhttp=n,b" %command%` before running the game.
+  
 4.) Navigate to ...\PEAK\BepInEx\plugins, copy and paste the PeakUnlimited.dll from releases into this folder. <br>
 5.) Run the game <br>
 
