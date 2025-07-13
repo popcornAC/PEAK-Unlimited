@@ -1,31 +1,89 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <!-- This is the most appropriate target framework for the game's Unity version. -->
         <TargetFramework>netstandard2.1</TargetFramework>
-        <!-- This is the GUID of your mod. Example: com.github.YourAccount.BepInExTemplate -->
         <AssemblyName>PEAKUnlimited</AssemblyName>
-        <!-- This is the display name of your mod. Example: BepInEx Template -->
         <AssemblyTitle>PEAKUnlimited</AssemblyTitle>
-        <!-- This is the version number of your mod. -->
-        <Version>0.1.0</Version>
+        <Version>2.7.1</Version>
+        <LangVersion>10.0</LangVersion>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <_SkipUpgradeNetAnalyzersNuGetWarning>true</_SkipUpgradeNetAnalyzersNuGetWarning>
     </PropertyGroup>
 
-    <!--
-    How to include thunderstore mods as dependencies via nuget
-  
-    We have already added the windows10ce nuget feed to this project
-    in NuGet.Config so all you need to do is list a dependency like
-    this:
-  
     <ItemGroup>
-      <PackageReference Include="ModTeam-ModName" Version="1.0.0" Private="False"/>
+        <PackageReference Include="Hamunii.BepInEx.AutoPlugin" Version="2.0.0" />
     </ItemGroup>
-  
-    Private="false" will stop it from being copied to the output folder
-    during build. This will cause the mod to be downloaded and its
-    methods will be available at compile time for your code. You'll still
-    need to add it as a dependency in your manifest.json, of course
-    -->
+
+    <ItemGroup>
+        <Reference Include="HarmonyLib">
+            <HintPath>../../libs/0Harmony.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine">
+            <HintPath>../../libs/UnityEngine.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>../../libs/UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+            <HintPath>../../libs/UnityEngine.UI.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule">
+            <HintPath>../../libs/UnityEngine.UIModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+            <HintPath>../../libs/UnityEngine.TextRenderingModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule">
+            <HintPath>../../libs/UnityEngine.InputLegacyModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.PhysicsModule">
+            <HintPath>../../libs/UnityEngine.PhysicsModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputModule">
+            <HintPath>../../libs/UnityEngine.InputModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Photon.Pun">
+            <HintPath>../../libs/Photon.Pun.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Photon.Realtime">
+            <HintPath>../../libs/Photon.Realtime.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Assembly-CSharp">
+            <HintPath>../../libs/Assembly-CSharp.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Zorro.Core">
+            <HintPath>../../libs/Zorro.Core.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="BepInEx">
+            <HintPath>../../libs/BepInEx.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="BepInEx.Harmony">
+            <HintPath>../../libs/BepInEx.Harmony.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+
+    <PropertyGroup>
+        <PEAK_PATH Condition="'$(PEAK_PATH)' == ''">C:\Program Files (x86)\Steam\steamapps\common\PEAK</PEAK_PATH>
+    </PropertyGroup>
+    
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Delete Files="$(PEAK_PATH)\BepInEx\plugins\PEAKUnlimited.dll" Condition="Exists('$(PEAK_PATH)\BepInEx\plugins\PEAKUnlimited.dll')" />
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PEAK_PATH)\BepInEx\plugins" Condition="Exists('$(PEAK_PATH)\BepInEx\plugins')" />
+    </Target>
 
 </Project>

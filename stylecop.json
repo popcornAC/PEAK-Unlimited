@@ -1,0 +1,41 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "rules": {
+      "documentationRules": {
+        "fileHeaderTemplate": "",
+        "xmlHeader": false
+      }
+    },
+    "documentationRules": {
+      "companyName": "PEAK Unlimited",
+      "variables": {
+        "companyName": "PEAK Unlimited"
+      },
+      "xmlHeader": false,
+      "fileNamingConvention": "stylecop"
+    },
+    "layoutRules": {
+      "newlineAtEndOfFile": "Require"
+    },
+    "namingRules": {
+      "allowCommonHungarianPrefixes": false,
+      "allowedHungarianPrefixes": [],
+      "allowedNamespaceComponents": [],
+      "includeInferredTupleElementNames": true,
+      "tupleElementNameCasing": "PascalCase"
+    },
+    "orderingRules": {
+      "blankLinesBetweenGroups": "allow",
+      "systemUsingDirectivesFirst": true,
+      "usingDirectivesPlacement": "outsideNamespace"
+    },
+    "readabilityRules": {
+      "useBuiltInTypeAliases": true
+    },
+    "spacingRules": {
+      "closingParenthesisMustBeSpacedCorrectly": false,
+      "openingParenthesisMustBeSpacedCorrectly": false
+    }
+  }
+} 

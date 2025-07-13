@@ -231,3 +231,8 @@ Directory.Build.targets
 /.idea
 /.config
 Config.Build.user.props.template
+
+# Ignore local DLLs used for development (Unity, game, BepInEx, etc.)
+libs/
+/extracted_dlls
+# Do NOT commit Unity, game, or BepInEx DLLs. See DEVELOPMENT_SETUP.md for setup instructions.

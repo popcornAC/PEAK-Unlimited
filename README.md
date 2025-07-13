@@ -24,7 +24,14 @@ Introducing, "PEAK Unlimited", a mod for PEAK which raises the lobby max player 
 ## Mods That Improve The Multiplayer Experience
 - [Voice Volume Saver](https://thunderstore.io/c/peak/p/glarmer/PEAK_Voice_Volume_Saver/) - Saves the volume of all your friends, no more adjusting their volume every time you load in!
 
-## Manual Installation
+## Installation
+
+### Recommended: Thunderstore (Easiest)
+1. Install [Thunderstore Mod Manager](https://www.overwolf.com/app/Thunderstore-Thunderstore_Mod_Manager)
+2. Search for "PEAK Unlimited" and install it
+3. Launch PEAK through Thunderstore
+
+### Manual Installation
 Only the host needs to install!
 
 1. Download BepInEx from [here](https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x64_5.4.23.3.zip)
